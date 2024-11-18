@@ -74,7 +74,7 @@ const onDrop = (event) => {
 };
 
 const getCardStackStyle = (index) => {
-  const random1 = Math.floor(Math.random() * (10 + 1 - 30)) + 30;
+  const random1 = Math.floor(Math.random() * (20 + 1 - 30)) + 30;
   const random2 = Math.floor(Math.random() * (45 + 1 - 55)) + 55;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
   return {
