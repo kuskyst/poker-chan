@@ -13,7 +13,7 @@
     <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="stackScores.length == 0">Reset</v-btn>
     Average: {{ average }}
 
-    <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="50vh">
+    <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
       <div class="ma-2" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
         {{ isReveal ? participants[index] : '' }}
         <score-card :is-open="isReveal" :score="score" />
