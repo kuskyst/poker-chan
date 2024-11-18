@@ -11,33 +11,24 @@
     <v-btn color="blue" @click="reveal">Reveal</v-btn>
     <v-btn color="red" class="ma-3" @click="reset">Reset</v-btn>
     Average: {{ average }}
+
     <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="50vh">
       <div v-for="(card, index) in selectedCards" :key="index" :style="getCardStackStyle(index)">
-        <v-card height="135" width="80">
-          <v-card-title class="text-end">{{ isOpen ? card : '??' }}</v-card-title>
-          <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
-          <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
-          <v-card-title class="text-start">{{ isOpen ? card : '??' }}</v-card-title>
-        </v-card>
+        <score-card :is-open="isOpen" :score="card" />
       </div>
     </v-sheet>
 
     <v-row>
       <v-col v-for="(card, index) in cards" :key="index" cols="auto" class="d-flex justify-center">
-        <v-card
-          height="135"
-          width="80"
+        <score-card
+          draggable="true"
           class="ma-1"
           :class="{'bg-grey-darken-1': selectedCard == card}"
-          draggable="true"
+          :is-open="true"
+          :score="card"
           @dragstart="onDragStart(card, $event)"
           @dblclick="selectCard(card)"
-        >
-          <v-card-title class="text-end">{{ card }}</v-card-title>
-          <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
-          <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
-          <v-card-title class="text-start">{{ card }}</v-card-title>
-        </v-card>
+        />
       </v-col>
     </v-row>
   </v-container>
