@@ -8,7 +8,8 @@
       <v-col>participants: {{ participants.join(', ') }}</v-col>
     </v-row>
 
-    <v-btn color="blue" @click="reveal">Reveal</v-btn>
+    Vote: {{ stackScores.length }} / {{ participants.length }}
+    <v-btn color="blue" class="ma-3"  @click="reveal" prepend-icon="mdi-send" :disabled="participants.length != stackScores.length">Reveal</v-btn>
     <v-btn color="red" class="ma-3" @click="reset">Reset</v-btn>
     Average: {{ average }}
 
@@ -47,7 +48,7 @@ const average = ref('??');
 const isOpen = ref(false);
 
 const selectScore = (score) => {
-  if (!isOpen.value && !isNaN(score)) {
+  if (!isOpen.value && !isNaN(score) && participants.value.length != stackScores.value.length) {
     stackScores.value.push(score);
     selectedScore.value = score;
   }

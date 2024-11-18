@@ -19,7 +19,8 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: './favicon.ico' }
-      ]
+      ],
+
     }
   },
 
@@ -33,6 +34,11 @@ export default defineNuxtConfig({
     '~/plugins/vuetify.ts'
   ],
 
+  css: [
+    "vuetify/lib/styles/main.sass",
+    "@mdi/font/css/materialdesignicons.css",
+  ],
+
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
@@ -40,7 +46,6 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     }
-    // ...
   ],
 
   vite: {
