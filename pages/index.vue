@@ -12,8 +12,9 @@
     <v-btn color="red" class="ma-3" @click="reset">Reset</v-btn>
     Average: {{ average }}
 
-    <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="50vh">
-      <div v-for="(score, index) in selectedScores" :key="index" :style="getCardStackStyle(index)">
+    <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="50vh">
+      <div class="ma-2" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
+        {{ isOpen ? participants[index] : '' }}
         <score-card :is-open="isOpen" :score="score" />
       </div>
     </v-sheet>
@@ -41,24 +42,24 @@ const yourName = ref('名無しちゃん');
 const participants = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
 const defaultScores = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
 const selectedScore = ref();
-const selectedScores = ref([]);
+const stackScores = ref([]);
 const average = ref('??');
 const isOpen = ref(false);
 
 const selectScore = (score) => {
   if (!isOpen.value) {
-    selectedScores.value.push(score);
+    stackScores.value.push(score);
     selectedScore.value = score;
   }
 }
 const reset = () => {
   isOpen.value = false;
-  selectedScores.value.splice(0);
+  stackScores.value.splice(0);
   average.value = '??';
 }
 const reveal = () => {
   isOpen.value = true;
-  average.value = selectedScores.value.reduce((sum, element) => sum + element, 0) / selectedScores.value.length;
+  average.value = stackScores.value.reduce((sum, element) => sum + element, 0) / stackScores.value.length;
 };
 
 const onDragStart = (score, event) => {
@@ -69,11 +70,11 @@ const onDrop = (event) => {
   selectScore(JSON.parse(event.dataTransfer.getData('score')));
 };
 
-const getCardStackStyle = (index) => {
+const stackScoresStyle = (index) => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
-  return {
+  return !isOpen.value ? {
     top: `${random1}%`,
     left: `${random2}%`,
     transform: `rotate(${random3}deg) translate(-${random1}%, -${random2}%)`,
@@ -81,6 +82,6 @@ const getCardStackStyle = (index) => {
     margin: `auto`,
     transition: `all 0.3s ease`,
     zIndex: index
-  };
+  } : {};
 };
 </script>
