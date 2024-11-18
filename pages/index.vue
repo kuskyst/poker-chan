@@ -1,5 +1,5 @@
 <template>
-  <v-container height="100vh" style="position: absolute; margin: auto;">
+  <v-container height="100vh">
     <v-text-field label="title" variant="outlined" clearable />
     <v-row justify="center" align-items="center">
       <v-col>
