@@ -6,13 +6,11 @@
         <div class="game-field" @drop.prevent="onDrop" @dragover.prevent>
           <!-- ドロップされたカードを表示 -->
           <div v-for="(card, index) in droppedCards" :key="index" class="card-stack" :style="getCardStackStyle(index)">
-            <v-card class="card" :style="cardStyle" @mousedown="onMouseDown(card, $event)">
-              <v-card class="card" :draggable="true" @dragstart="onDragStart(card, $event)">
+            <v-card class="card" :style="cardStyle" @dragEnd="onDragEnd(card, $event)">
                 <v-card-title class="text-end">{{ card }}</v-card-title>
                 <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
                 <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
                 <v-card-title class="text-start">{{ card }}</v-card-title>
-              </v-card>
             </v-card>
           </div>
         </div>
@@ -63,7 +61,7 @@ const getCardStackStyle = (index) => {
   };
 };
 
-const onMouseDown = (card, event) => {
+const onDragEnd = (card, event) => {
   const cardElement = event.target;
   const offsetX = event.clientX - cardElement.getBoundingClientRect().left;
   const offsetY = event.clientY - cardElement.getBoundingClientRect().top;
