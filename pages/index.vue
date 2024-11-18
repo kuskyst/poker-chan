@@ -106,7 +106,7 @@ const stackScoresStyle = (index) => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
-  return !isReveal.value ? 
+  return !isReveal.value ?
     {
       top: `${random1}%`,
       left: `${random2}%`,
