@@ -3,6 +3,7 @@
 | # | |
 | ---- | ---- |
 | Language| Nuxt.js 3 (Vue.js 3) |
+| UI Component | Vuetify 3 |
 | Transition | vue-router |
 | Asynchronous | Axios |
 
