@@ -29,7 +29,7 @@
           :is-open="true"
           :score="score"
           @dragstart="onDragStart(score, $event)"
-          @dblclick="selectScore(score)"
+          @dblclick="play(score)"
         />
       </v-col>
       <v-col>
@@ -44,7 +44,7 @@
           width="80"
           class="ma-1 d-flex align-center justify-center"
           @dragstart="onDragStart(0, $event)"
-          @dblclick="selectScore(0)"
+          @dblclick="play(0)"
         >
           ☕
         </v-card>
@@ -64,7 +64,7 @@ const stackScores = ref([]);
 const average = ref('??');
 const isOpen = ref(false);
 
-const selectScore = (score) => {
+const play = (score) => {
   if (!isOpen.value && !isNaN(score) && participants.value.length != stackScores.value.length) {
     stackScores.value.push(score);
     selectedScore.value = score;
@@ -85,7 +85,7 @@ const onDragStart = (score, event) => {
 };
 
 const onDrop = (event) => {
-  selectScore(JSON.parse(event.dataTransfer.getData('score')));
+  play(JSON.parse(event.dataTransfer.getData('score')));
 };
 
 const stackScoresStyle = (index) => {
