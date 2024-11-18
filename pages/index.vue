@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container height="100%">
     <v-text-field label="title" variant="outlined" clearable />
     <v-row justify="center" align-items="center">
       <v-col>
@@ -11,22 +11,18 @@
     <v-btn color="blue" @click="reveal">Reveal</v-btn>
     <v-btn color="red" class="ma-3" @click="reset">Reset</v-btn>
     Average: {{ average }}
-    <v-row justify="center">
-      <v-col class="justify-center">
-        <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="500px">
-          <div v-for="(card, index) in selectedCards" :key="index" :style="getCardStackStyle(index)">
-            <v-card height="135" width="80">
-              <v-card-title class="text-end">{{ isOpen ? card : '??' }}</v-card-title>
-              <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
-              <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
-              <v-card-title class="text-start">{{ isOpen ? card : '??' }}</v-card-title>
-            </v-card>
-          </div>
-        </v-sheet>
-      </v-col>
-    </v-row>
+    <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="60%">
+      <div v-for="(card, index) in selectedCards" :key="index" :style="getCardStackStyle(index)">
+        <v-card height="135" width="80">
+          <v-card-title class="text-end">{{ isOpen ? card : '??' }}</v-card-title>
+          <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
+          <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
+          <v-card-title class="text-start">{{ isOpen ? card : '??' }}</v-card-title>
+        </v-card>
+      </div>
+    </v-sheet>
 
-    <v-row justify="center">
+    <v-row>
       <v-col v-for="(card, index) in cards" :key="index" cols="auto" class="d-flex justify-center">
         <v-card
           height="135"
@@ -84,11 +80,11 @@ const onDrop = (event) => {
 };
 
 const getCardStackStyle = (index) => {
-  const random1 = Math.floor(Math.random() * (15 + 1 - 30)) + 30;
+  const random1 = Math.floor(Math.random() * (50 + 1 - 60)) + 30;
   const random2 = Math.floor(Math.random() * (45 + 1 - 55)) + 55;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
   return {
-    top: `${random1}%`,
+    bottom: `${random1}%`,
     left: `${random2}%`,
     transform: `rotate(${random3}deg)`,
     position: `absolute`,
