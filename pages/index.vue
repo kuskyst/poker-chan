@@ -32,9 +32,13 @@
           @dblclick="play(score)"
         />
       </v-col>
-      <v-col>
-        <v-card height="130" width="80" class="ma-1 d-flex align-center justify-center">
-          <v-icon icon="mdi-plus" />
+      <v-col >
+        <v-card v-if="!drawMode" height="130" width="80" class="ma-1 d-flex align-center justify-center" @click="drawMode = true">
+          <v-icon icon="mdi-asterisk" />
+        </v-card>
+        <v-card v-else height="130" width="80" class="ma-1">
+          <v-card-title class="text-end"><v-text-field type="number" v-model="drawScore" variant="underlined" class="text-end" /></v-card-title>
+          <v-card-subtitle class="text-center"><v-btn width="26" height="26" icon="mdi-plus" @click="draw(drawScore)" /></v-card-subtitle>
         </v-card>
       </v-col>
       <v-col>
@@ -63,12 +67,21 @@ const selectedScore = ref();
 const stackScores = ref([]);
 const average = ref('??');
 const isReveal = ref(false);
+const drawMode = ref(false);
+const drawScore = ref(10);
 
 const play = (score) => {
   if (!isReveal.value && !isNaN(score) && participants.value.length != stackScores.value.length) {
     stackScores.value.push(score);
     selectedScore.value = score;
   }
+}
+const draw = (score) => {
+  if (!hands.value.includes(score)) {
+    hands.value.push(score);
+    hands.value.sort((a, b) => a - b);
+  }
+  drawMode.value = false;
 }
 const reset = () => {
   isReveal.value = false;
@@ -81,6 +94,7 @@ const reveal = () => {
 };
 
 const onDragStart = (score, event) => {
+  drawMode.value = false;
   event.dataTransfer.setData('score', JSON.stringify(score));
 };
 
