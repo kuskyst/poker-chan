@@ -75,14 +75,19 @@ const stackScoresStyle = (index) => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
-  return !isOpen.value ? {
-    top: `${random1}%`,
-    left: `${random2}%`,
-    transform: `rotate(${random3}deg) translate(-${random1}%, -${random2}%)`,
-    position: `absolute`,
-    margin: `auto`,
-    transition: `all 0.3s ease`,
-    zIndex: index
-  } : {};
+  return !isOpen.value ? 
+    {
+      top: `${random1}%`,
+      left: `${random2}%`,
+      transform: `rotate(${random3}deg) translate(-${random1}%, -${random2}%)`,
+      position: 'absolute',
+      margin: 'auto',
+      transition: 'all 0.3s ease',
+      zIndex: index
+    } :
+    {
+      transition: 'all 1s ease',
+      transform: 'rotate(0deg) translate(0%, 0%)',
+    };
 };
 </script>
