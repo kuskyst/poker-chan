@@ -1,16 +1,17 @@
 <template>
   <v-container>
+    <v-btn color="blue" @click="reveal">Reveal</v-btn>
+    <v-btn color="red" @click="reset">Reset</v-btn>
+    Avarage: {{ average }}
     <v-row justify="center">
-      <!-- フィールドエリア -->
       <v-col cols="16" class="d-flex justify-center">
-        <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="pink-lighten-4" width="100%" height="300">
-          <!-- ドロップされたカードを表示 -->
-          <div v-for="(card, index) in droppedCards" :key="index" class="card-stack" :style="getCardStackStyle(index)">
+        <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="400">
+          <div v-for="(card, index) in selectedCards" :key="index" class="card-stack" :style="getCardStackStyle(index)">
             <v-card height="135" width="80">
-              <v-card-title class="text-end">{{ card }}</v-card-title>
+              <v-card-title class="text-end">{{ isOpen ? card : '??' }}</v-card-title>
               <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
               <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
-              <v-card-title class="text-start">{{ card }}</v-card-title>
+              <v-card-title class="text-start">{{ isOpen ? card : '??' }}</v-card-title>
             </v-card>
           </div>
         </v-sheet>
@@ -19,7 +20,15 @@
 
     <v-row justify="center">
       <v-col v-for="(card, index) in cards" :key="index" cols="auto" class="d-flex justify-center">
-        <v-card class="ma-1" :draggable="true" @dragstart="onDragStart(card, $event)" height="135" width="80">
+        <v-card
+          height="135"
+          width="80"
+          class="ma-1"
+          :class="{'bg-grey-darken-1': selectedCard == card}"
+          draggable="true"
+          @dragstart="onDragStart(card, $event)"
+          @dblclick="selectCard(card)"
+        >
           <v-card-title class="text-end">{{ card }}</v-card-title>
           <v-card-subtitle v-if="card % 2 == 0" class="text-center">❤︎♦️<br>♧♤</v-card-subtitle>
           <v-card-subtitle v-else class="text-center">♡♢<br>♣️♠︎</v-card-subtitle>
@@ -33,8 +42,27 @@
 <script setup>
 import { ref } from 'vue';
 
-const cards = ref([0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 40]);
-const droppedCards = ref([]);
+const cards = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
+const selectedCard = ref();
+const selectedCards = ref([]);
+const average = ref('??');
+const isOpen = ref(false);
+
+const selectCard = (card) => {
+  if (!isOpen.value) {
+    selectedCards.value.push(card);
+    selectedCard.value = card;
+  }
+}
+const reset = () => {
+  isOpen.value = false;
+  selectedCards.value.splice(0);
+  average.value = '??';
+}
+const reveal = () => {
+  isOpen.value = true;
+  average.value = selectedCards.value.reduce((sum, element) => sum + element, 0) / selectedCards.value.length;
+};
 
 const onDragStart = (card, event) => {
   event.dataTransfer.setData('card', JSON.stringify(card));
@@ -42,35 +70,17 @@ const onDragStart = (card, event) => {
 
 const onDrop = (event) => {
   const card = JSON.parse(event.dataTransfer.getData('card'));
-  droppedCards.value.push(card);
+  selectCard(card);
 };
 
 const getCardStackStyle = (index) => {
-  const stackHeight = 20; // 重なりの高さ
+  const stackHeight = 20;
   return {
     top: `${index * stackHeight}px`,
     left: '50%',
     transform: 'translateX(-50%)',
-    zIndex: index, // スタック順を調整
+    zIndex: index
   };
-};
-
-const onDragEnd = (card, event) => {
-  const cardElement = event.target;
-  const offsetX = event.clientX - cardElement.getBoundingClientRect().left;
-  const offsetY = event.clientY - cardElement.getBoundingClientRect().top;
-
-  const onMouseMove = (e) => {
-    cardStyle.value.left = `${e.clientX - offsetX}px`;
-    cardStyle.value.top = `${e.clientY - offsetY}px`;
-  };
-  const onMouseUp = () => {
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-    droppedCards.value.push(card);
-  };
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
 };
 </script>
 
