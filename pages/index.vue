@@ -15,8 +15,8 @@
 
     <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="50vh">
       <div class="ma-2" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
-        {{ isOpen ? participants[index] : '' }}
-        <score-card :is-open="isOpen" :score="score" />
+        {{ isReveal ? participants[index] : '' }}
+        <score-card :is-open="isReveal" :score="score" />
       </div>
     </v-sheet>
 
@@ -62,21 +62,21 @@ const hands = ref([0.5, 1, 2, 3, 5, 8, 10, 13, 20, 40, 100]);
 const selectedScore = ref();
 const stackScores = ref([]);
 const average = ref('??');
-const isOpen = ref(false);
+const isReveal = ref(false);
 
 const play = (score) => {
-  if (!isOpen.value && !isNaN(score) && participants.value.length != stackScores.value.length) {
+  if (!isReveal.value && !isNaN(score) && participants.value.length != stackScores.value.length) {
     stackScores.value.push(score);
     selectedScore.value = score;
   }
 }
 const reset = () => {
-  isOpen.value = false;
+  isReveal.value = false;
   stackScores.value.splice(0);
   average.value = '??';
 }
 const reveal = () => {
-  isOpen.value = true;
+  isReveal.value = true;
   average.value = stackScores.value.reduce((sum, element) => sum + element, 0) / stackScores.value.filter(v => v != 0).length;
 };
 
@@ -92,7 +92,7 @@ const stackScoresStyle = (index) => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
-  return !isOpen.value ? 
+  return !isReveal.value ? 
     {
       top: `${random1}%`,
       left: `${random2}%`,
