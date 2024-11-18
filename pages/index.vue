@@ -1,5 +1,5 @@
 <template>
-  <v-container height="100vh">
+  <v-container height="100vh" style="position: absolute; margin: auto;">
     <v-text-field label="title" variant="outlined" clearable />
     <v-row justify="center" align-items="center">
       <v-col>
@@ -20,8 +20,8 @@
       </div>
     </v-sheet>
 
-    <v-row>
-      <v-col v-for="(score, index) in defaultScores" :key="index" cols="auto" class="d-flex justify-center">
+    <v-row class="ml-1 overflow-x-scroll flex-nowrap">
+      <v-col v-for="(score, index) in hands" :key="index" cols="auto" class="d-flex justify-center">
         <score-card
           draggable="true"
           class="ma-1"
@@ -29,8 +29,25 @@
           :is-open="true"
           :score="score"
           @dragstart="onDragStart(score, $event)"
-          @dblclick="selectCard(score)"
+          @dblclick="selectScore(score)"
         />
+      </v-col>
+      <v-col>
+        <v-card height="130" width="80" class="ma-1 d-flex align-center justify-center">
+          <v-icon icon="mdi-plus" />
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card
+          draggable="true"
+          height="130"
+          width="80"
+          class="ma-1 d-flex align-center justify-center"
+          @dragstart="onDragStart(0, $event)"
+          @dblclick="selectScore(0)"
+        >
+          ☕
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -41,7 +58,7 @@ import { ref } from 'vue';
 
 const yourName = ref('名無しちゃん');
 const participants = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
-const defaultScores = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '*', '☕']);
+const hands = ref([0.5, 1, 2, 3, 5, 8, 10, 13, 20, 40, 100]);
 const selectedScore = ref();
 const stackScores = ref([]);
 const average = ref('??');
@@ -60,7 +77,7 @@ const reset = () => {
 }
 const reveal = () => {
   isOpen.value = true;
-  average.value = stackScores.value.reduce((sum, element) => sum + element, 0) / stackScores.value.length;
+  average.value = stackScores.value.reduce((sum, element) => sum + element, 0) / stackScores.value.filter(v => v != 0).length;
 };
 
 const onDragStart = (score, event) => {
