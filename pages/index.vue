@@ -13,21 +13,21 @@
     Average: {{ average }}
 
     <v-sheet @drop.prevent="onDrop" @dragover.prevent rounded="xl" color="green-lighten-2" width="100%" height="50vh">
-      <div v-for="(card, index) in selectedCards" :key="index" :style="getCardStackStyle(index)">
-        <score-card :is-open="isOpen" :score="card" />
+      <div v-for="(score, index) in selectedScores" :key="index" :style="getCardStackStyle(index)">
+        <score-card :is-open="isOpen" :score="score" />
       </div>
     </v-sheet>
 
     <v-row>
-      <v-col v-for="(card, index) in cards" :key="index" cols="auto" class="d-flex justify-center">
+      <v-col v-for="(score, index) in defaultScores" :key="index" cols="auto" class="d-flex justify-center">
         <score-card
           draggable="true"
           class="ma-1"
-          :class="{'bg-grey-darken-1': selectedCard == card}"
+          :class="{'bg-grey-darken-1': selectedScore == score}"
           :is-open="true"
-          :score="card"
-          @dragstart="onDragStart(card, $event)"
-          @dblclick="selectCard(card)"
+          :score="score"
+          @dragstart="onDragStart(score, $event)"
+          @dblclick="selectCard(score)"
         />
       </v-col>
     </v-row>
@@ -39,35 +39,34 @@ import { ref } from 'vue';
 
 const yourName = ref('名無しちゃん');
 const participants = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
-const cards = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
-const selectedCard = ref();
-const selectedCards = ref([]);
+const defaultScores = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
+const selectedScore = ref();
+const selectedScores = ref([]);
 const average = ref('??');
 const isOpen = ref(false);
 
-const selectCard = (card) => {
+const selectScore = (score) => {
   if (!isOpen.value) {
-    selectedCards.value.push(card);
-    selectedCard.value = card;
+    selectedScores.value.push(score);
+    selectedScore.value = score;
   }
 }
 const reset = () => {
   isOpen.value = false;
-  selectedCards.value.splice(0);
+  selectedScores.value.splice(0);
   average.value = '??';
 }
 const reveal = () => {
   isOpen.value = true;
-  average.value = selectedCards.value.reduce((sum, element) => sum + element, 0) / selectedCards.value.length;
+  average.value = selectedScores.value.reduce((sum, element) => sum + element, 0) / selectedScores.value.length;
 };
 
-const onDragStart = (card, event) => {
-  event.dataTransfer.setData('card', JSON.stringify(card));
+const onDragStart = (score, event) => {
+  event.dataTransfer.setData('score', JSON.stringify(score));
 };
 
 const onDrop = (event) => {
-  const card = JSON.parse(event.dataTransfer.getData('card'));
-  selectCard(card);
+  selectScore(JSON.parse(event.dataTransfer.getData('score')));
 };
 
 const getCardStackStyle = (index) => {
