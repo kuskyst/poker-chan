@@ -14,7 +14,7 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
         { property: 'twitter:card', content: "summary" },
         { property: 'og:title', content: 'poker-chan' },
-        { property: 'og:description', content: 'プランニングポーカー' },
+        { property: 'og:description', content: 'プランニングポーカーちゃん' },
         { property: 'og:image', content: './favicon.ico' }
       ],
       link: [
