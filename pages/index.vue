@@ -11,7 +11,7 @@
     Vote: {{ stackScores.length }} / {{ participants.length }}
     <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="participants.length != stackScores.length">Reveal</v-btn>
     <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="stackScores.length == 0">Reset</v-btn>
-    Average: {{ Math.floor((average) * 100) / 100 }}
+    Average: {{ average }}
 
     <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
       <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%"></v-card>
