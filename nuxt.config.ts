@@ -34,11 +34,6 @@ export default defineNuxtConfig({
     '~/plugins/vuetify.ts'
   ],
 
-  css: [
-    "vuetify/lib/styles/main.sass",
-    "@mdi/font/css/materialdesignicons.css",
-  ],
-
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
