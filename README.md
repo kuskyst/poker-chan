@@ -1,4 +1,4 @@
-# poke-chan
+# poker-chan
 
 | # | |
 | ---- | ---- |
