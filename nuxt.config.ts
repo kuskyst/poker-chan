@@ -48,7 +48,14 @@ export default defineNuxtConfig({
       template: {
         transformAssetUrls
       }
-    }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler"
+        }
+      }
+  }
   },
 
   compatibilityDate: '2024-11-18'
