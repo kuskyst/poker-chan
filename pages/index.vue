@@ -11,7 +11,7 @@
     Vote: {{ stackScores.length }} / {{ participants.length }}
     <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="participants.length != stackScores.length">Reveal</v-btn>
     <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="stackScores.length == 0">Reset</v-btn>
-    Average: {{ average }}
+    Average: {{ Math.floor((average) * 100) / 100 }}
 
     <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
       <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%"></v-card>
@@ -58,26 +58,26 @@
   </v-container>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, type StyleValue } from 'vue';
 
 const yourName = ref('名無しちゃん');
 const participants = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
 const hands = ref([0.5, 1, 2, 3, 5, 8, 10, 13, 20, 40, 100]);
 const selectedScore = ref();
-const stackScores = ref([]);
-const average = ref('??');
+const stackScores = ref<number[]>([]);;
+const average = ref(0);
 const isReveal = ref(false);
 const drawMode = ref(false);
 const drawScore = ref(10);
 
-const play = (score) => {
+const play = (score: number) => {
   if (!isReveal.value && !isNaN(score) && participants.value.length != stackScores.value.length) {
     stackScores.value.push(score);
     selectedScore.value = score;
   }
 }
-const draw = (score) => {
+const draw = (score: number) => {
   if (!hands.value.includes(score)) {
     hands.value.push(score);
     hands.value.sort((a, b) => a - b);
@@ -87,23 +87,23 @@ const draw = (score) => {
 const reset = () => {
   isReveal.value = false;
   stackScores.value.splice(0);
-  average.value = '??';
+  average.value = 0;
 }
 const reveal = () => {
   isReveal.value = true;
   average.value = stackScores.value.reduce((sum, element) => sum + element, 0) / stackScores.value.filter(v => v != 0).length;
 };
 
-const onDragStart = (score, event) => {
+const onDragStart = (score: number, event: any) => {
   drawMode.value = false;
   event.dataTransfer.setData('score', JSON.stringify(score));
 };
 
-const onDrop = (event) => {
+const onDrop = (event: any) => {
   play(JSON.parse(event.dataTransfer.getData('score')));
 };
 
-const stackScoresStyle = (index) => {
+const stackScoresStyle = (index: any): StyleValue => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
