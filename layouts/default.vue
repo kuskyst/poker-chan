@@ -10,6 +10,5 @@ html, body, #__nuxt, #layout {
   padding: 0;
   height: 100vh;
   overflow: hidden;
-  user-select: none;
 }
 </style>
