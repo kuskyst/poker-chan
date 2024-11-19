@@ -32,7 +32,7 @@
           @dblclick="play(score)"
         />
       </v-col>
-      <v-col >
+      <v-col>
         <v-card v-if="!drawMode" height="130" width="80" class="ma-1 d-flex align-center justify-center" @click="drawMode = true">
           <v-icon icon="mdi-asterisk" />
         </v-card>
