@@ -55,7 +55,7 @@ export default defineNuxtConfig({
           api: "modern-compiler"
         }
       }
-  }
+    }
   },
 
   compatibilityDate: '2024-11-18'
