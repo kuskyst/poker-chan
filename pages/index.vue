@@ -2,7 +2,7 @@
   <v-container height="100vh">
     <v-text-field label="title" variant="outlined" clearable />
     <v-row justify="center" align-items="center">
-      <v-col>
+      <v-col cols="3">
         <v-text-field label="your name" variant="outlined" v-model="yourName" />
       </v-col>
       <v-col>participants: {{ participants.join(', ') }}</v-col>
