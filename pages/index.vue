@@ -1,6 +1,6 @@
 <template>
   <div height="100vh">
-    <div width="80%" class="bg-teal-accent-3 text-white pt-3 pl-16 pr-16">
+    <div width="80%" class="bg-teal-accent-3 text-white pt-3 pl-3 pr-3">
       <v-text-field bg-color="white" label="title" variant="solo" clearable />
       <v-row justify="center" align-items="center">
         <v-col cols="3">
