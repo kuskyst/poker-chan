@@ -3,7 +3,7 @@
     <div width="80%" class="bg-teal-accent-3 text-white pt-3 pl-3 pr-3">
       <v-text-field bg-color="white" label="title" variant="solo" clearable />
       <v-row justify="center" align-items="center">
-        <v-col cols="3">
+        <v-col cols="4">
           <v-text-field bg-color="white" label="your name" variant="solo" v-model="yourName" />
         </v-col>
         <v-col class="text-truncate">participants: {{ participants.join(', ') }}</v-col>
@@ -23,7 +23,7 @@
             :is-open="isReveal"
             :score="score"
             :class="{
-              'bg-red-lighten-4': isReveal && Math.min(...stackScores.filter(v => v != 0)) == score,
+              'bg-red-lighten-4': isReveal && Math.min(...stackScores.filter(v => v > 0)) == score,
               'bg-blue-lighten-4': isReveal && Math.max(...stackScores) == score,
               'mt-1': isReveal
             }"
@@ -47,18 +47,6 @@
           />
         </v-col>
         <v-col>
-          <v-card
-            draggable="true"
-            height="130"
-            width="90"
-            class="ma-1 d-flex align-center justify-center"
-            @dragstart="onDragStart(0, $event)"
-            @dblclick="play(0)"
-          >
-            ☕
-          </v-card>
-        </v-col>
-        <v-col>
           <v-card height="130" width="90" class="ma-1">
             <v-number-input flat hide-details inset v-model="drawScore" variant="solo" controlVariant="stacked" :max="99" :min="0" />
             <v-btn elevation="0" height="50%" prepend-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">add</v-btn>
@@ -74,7 +62,7 @@ import { ref, type StyleValue } from 'vue';
 
 const yourName = ref('名無しちゃん');
 const participants = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
-const hands = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
+const hands = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -1]);
 const selectedScore = ref();
 const stackScores = ref<number[]>([]);;
 const average = ref(0);
@@ -100,7 +88,7 @@ const reset = () => {
 }
 const reveal = () => {
   isReveal.value = true;
-  average.value = stackScores.value.reduce((sum, element) => sum + element, 0) / stackScores.value.filter(v => v != 0).length;
+  average.value = stackScores.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / stackScores.value.filter(v => v > 0).length;
 };
 
 const onDragStart = (score: number, event: any) => {
