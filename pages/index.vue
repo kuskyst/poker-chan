@@ -15,7 +15,7 @@
     </div>
 
     <v-container>
-      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="45vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
         <div class="ma-1 text-white" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
           {{ isReveal ? participants[index] : '' }}
