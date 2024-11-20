@@ -37,7 +37,7 @@
         <v-card
           draggable="true"
           height="130"
-          width="80"
+          width="90"
           class="ma-1 d-flex align-center justify-center"
           @dragstart="onDragStart(0, $event)"
           @dblclick="play(0)"
@@ -46,14 +46,9 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="130" width="80" class="ma-1">
-          <v-card-title class="text-center d-flex">
-            {{ drawScore }}
-            <v-btn class="ml-1" width="26" height="26" icon="mdi-plus" @click="draw(drawScore)" />
-          </v-card-title>
-          <v-card-text class="text-center">
-              <v-number-input v-model="drawScore" hideInput inset variant="solo" controlVariant="stacked" :max="100" :min="0" />
-          </v-card-text>
+        <v-card height="130" width="90" class="ma-1">
+          <v-number-input flat hide-details v-model="drawScore" inset variant="solo" controlVariant="stacked" :max="99" :min="0" />
+          <v-btn elevation="0" height="50%" prepend-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">add</v-btn>
         </v-card>
       </v-col>
     </v-row>
