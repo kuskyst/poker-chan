@@ -15,14 +15,15 @@
 
     <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
       <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%"></v-card>
-      <div class="ma-2" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
+      <div class="ma-2 text-white" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
         {{ isReveal ? participants[index] : '' }}
         <score-card
           :is-open="isReveal"
           :score="score"
           :class="{
             'bg-red-lighten-4': isReveal && Math.min(...stackScores) == score,
-            'bg-blue-lighten-4': isReveal && Math.max(...stackScores) == score
+            'bg-blue-lighten-4': isReveal && Math.max(...stackScores) == score,
+            'mt-1': isReveal
           }"
         />
       </div>
