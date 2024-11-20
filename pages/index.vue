@@ -26,7 +26,7 @@
         <score-card
           draggable="true"
           class="ma-1"
-          :class="{'bg-grey-darken-1': selectedScore == score}"
+          :class="{'bg-green-accent-2': selectedScore == score}"
           :is-open="true"
           :score="score"
           @dragstart="onDragStart(score, $event)"
