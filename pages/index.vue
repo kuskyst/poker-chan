@@ -62,7 +62,7 @@ import { ref, type StyleValue } from 'vue';
 
 const yourName = ref('名無しちゃん');
 const participants = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
-const hands = ref([0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -1]);
+const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
 const selectedScore = ref();
 const stackScores = ref<number[]>([]);;
 const average = ref(0);
