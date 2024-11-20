@@ -6,7 +6,7 @@
         <v-col cols="3">
           <v-text-field bg-color="white" label="your name" variant="solo" v-model="yourName" />
         </v-col>
-        <v-col>participants: {{ participants.join(', ') }}</v-col>
+        <v-col class="text-truncate">participants: {{ participants.join(', ') }}</v-col>
       </v-row>
       Vote: {{ stackScores.length }} / {{ participants.length }}
       <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="participants.length != stackScores.length">Reveal</v-btn>
