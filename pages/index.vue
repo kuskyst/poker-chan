@@ -49,7 +49,7 @@
         <v-col>
           <v-card height="130" width="90" class="ma-1">
             <v-number-input flat hide-details inset v-model="drawScore" variant="solo" controlVariant="stacked" :max="99" :min="0" />
-            <v-btn elevation="0" height="50%" prepend-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">add</v-btn>
+            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">add</v-btn>
           </v-card>
         </v-col>
       </v-row>
