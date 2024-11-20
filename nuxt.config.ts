@@ -34,6 +34,10 @@ export default defineNuxtConfig({
     '~/plugins/vuetify.ts'
   ],
 
+  css: [
+    'vuetify/styles'
+  ],
+
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {

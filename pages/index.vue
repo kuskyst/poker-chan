@@ -34,15 +34,6 @@
         />
       </v-col>
       <v-col>
-        <v-card v-if="!drawMode" height="130" width="80" class="ma-1 d-flex align-center justify-center" @click="drawMode = true">
-          <v-icon icon="mdi-asterisk" />
-        </v-card>
-        <v-card v-else height="130" width="80" class="ma-1">
-          <v-card-title class="text-end"><v-text-field type="number" v-model="drawScore" variant="underlined" class="text-end" /></v-card-title>
-          <v-card-subtitle class="text-center"><v-btn width="26" height="26" icon="mdi-plus" @click="draw(drawScore)" /></v-card-subtitle>
-        </v-card>
-      </v-col>
-      <v-col>
         <v-card
           draggable="true"
           height="130"
@@ -52,6 +43,17 @@
           @dblclick="play(0)"
         >
           ☕
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="130" width="80" class="ma-1">
+          <v-card-title class="text-center d-flex">
+            {{ drawScore }}
+            <v-btn class="ml-1" width="26" height="26" icon="mdi-plus" @click="draw(drawScore)" />
+          </v-card-title>
+          <v-card-text class="text-center">
+              <v-number-input v-model="drawScore" hideInput inset variant="solo" controlVariant="stacked" :max="100" :min="0" />
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -68,7 +70,6 @@ const selectedScore = ref();
 const stackScores = ref<number[]>([]);;
 const average = ref(0);
 const isReveal = ref(false);
-const drawMode = ref(false);
 const drawScore = ref(10);
 
 const play = (score: number) => {
@@ -82,7 +83,6 @@ const draw = (score: number) => {
     hands.value.push(score);
     hands.value.sort((a, b) => a - b);
   }
-  drawMode.value = false;
 }
 const reset = () => {
   isReveal.value = false;
@@ -95,7 +95,6 @@ const reveal = () => {
 };
 
 const onDragStart = (score: number, event: any) => {
-  drawMode.value = false;
   event.dataTransfer.setData('score', JSON.stringify(score));
 };
 
@@ -103,7 +102,7 @@ const onDrop = (event: any) => {
   play(JSON.parse(event.dataTransfer.getData('score')));
 };
 
-const stackScoresStyle = (index: any): StyleValue => {
+const stackScoresStyle = (index: number): StyleValue => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;

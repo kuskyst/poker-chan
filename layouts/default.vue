@@ -1,11 +1,11 @@
 <template>
-  <div id="layout">
+  <v-app>
     <slot/>
-  </div>
+  </v-app>
 </template>
 
 <style lang="scss">
-html, body, #__nuxt, #layout {
+html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
