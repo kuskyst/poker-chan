@@ -1,66 +1,72 @@
 <template>
-  <v-container height="100vh">
-    <v-text-field label="title" variant="outlined" clearable />
-    <v-row justify="center" align-items="center">
-      <v-col cols="3">
-        <v-text-field label="your name" variant="outlined" v-model="yourName" />
-      </v-col>
-      <v-col>participants: {{ participants.join(', ') }}</v-col>
-    </v-row>
+  <div height="100vh">
+    <div width="80%" class="bg-teal-accent-3 text-white pt-3 pl-16 pr-16">
+      <v-text-field bg-color="white" label="title" variant="solo" clearable />
+      <v-row justify="center" align-items="center">
+        <v-col cols="3">
+          <v-text-field bg-color="white" label="your name" variant="solo" v-model="yourName" />
+        </v-col>
+        <v-col>participants: {{ participants.join(', ') }}</v-col>
+      </v-row>
+      Vote: {{ stackScores.length }} / {{ participants.length }}
+      <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="participants.length != stackScores.length">Reveal</v-btn>
+      <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="stackScores.length == 0">Reset</v-btn>
+      Average: {{ average > 0 ? Math.floor((average) * 100) / 100 : '??' }}
+    </div>
 
-    Vote: {{ stackScores.length }} / {{ participants.length }}
-    <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="participants.length != stackScores.length">Reveal</v-btn>
-    <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="stackScores.length == 0">Reset</v-btn>
-    Average: {{ average > 0 ? Math.floor((average) * 100) / 100 : '??' }}
+    <v-container>
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
+        <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
+        <div class="ma-2 text-white" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
+          {{ isReveal ? participants[index] : '' }}
+          <score-card
+            :is-open="isReveal"
+            :score="score"
+            :class="{
+              'bg-red-lighten-4': isReveal && Math.min(...stackScores.filter(v => v != 0)) == score,
+              'bg-blue-lighten-4': isReveal && Math.max(...stackScores) == score,
+              'mt-1': isReveal
+            }"
+          />
+        </div>
+      </v-sheet>
 
-    <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
-      <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%"></v-card>
-      <div class="ma-2 text-white" v-for="(score, index) in stackScores" :key="index" :style="stackScoresStyle(index)">
-        {{ isReveal ? participants[index] : '' }}
-        <score-card
-          :is-open="isReveal"
-          :score="score"
-          :class="{
-            'bg-red-lighten-4': isReveal && Math.min(...stackScores) == score,
-            'bg-blue-lighten-4': isReveal && Math.max(...stackScores) == score,
-            'mt-1': isReveal
-          }"
-        />
-      </div>
-    </v-sheet>
-
-    <v-row class="ml-1 overflow-x-scroll flex-nowrap">
-      <v-col v-for="(score, index) in hands" :key="index" cols="auto" class="d-flex justify-center">
-        <score-card
-          draggable="true"
-          class="ma-1"
-          :class="{'bg-green-accent-2': selectedScore == score}"
-          :is-open="true"
-          :score="score"
-          @dragstart="onDragStart(score, $event)"
-          @dblclick="play(score)"
-        />
-      </v-col>
-      <v-col>
-        <v-card
-          draggable="true"
-          height="130"
-          width="90"
-          class="ma-1 d-flex align-center justify-center"
-          @dragstart="onDragStart(0, $event)"
-          @dblclick="play(0)"
-        >
-          ☕
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card height="130" width="90" class="ma-1">
-          <v-number-input flat hide-details inset v-model="drawScore" variant="solo" controlVariant="stacked" :max="99" :min="0" />
-          <v-btn elevation="0" height="50%" prepend-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">add</v-btn>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+      <v-row class="ml-1 overflow-x-scroll flex-nowrap">
+        <v-col v-for="(score, index) in hands" :key="index" cols="auto" class="d-flex justify-center">
+          <score-card
+            draggable="true"
+            class="ma-1"
+            :is-open="true"
+            :score="score"
+            @dragstart="onDragStart(score, $event)"
+            @dblclick="play(score)"
+            :class="{
+              'bg-green-accent-2': selectedScore == score,
+              'text-white': selectedScore == score
+            }"
+          />
+        </v-col>
+        <v-col>
+          <v-card
+            draggable="true"
+            height="130"
+            width="90"
+            class="ma-1 d-flex align-center justify-center"
+            @dragstart="onDragStart(0, $event)"
+            @dblclick="play(0)"
+          >
+            ☕
+          </v-card>
+        </v-col>
+        <v-col>
+          <v-card height="130" width="90" class="ma-1">
+            <v-number-input flat hide-details inset v-model="drawScore" variant="solo" controlVariant="stacked" :max="99" :min="0" />
+            <v-btn elevation="0" height="50%" prepend-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">add</v-btn>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
