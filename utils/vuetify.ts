@@ -9,7 +9,7 @@ const vuetify = createVuetify({
   components: {
     ...components,
     ...labsComponents
-  }, 
+  },
   directives: { directives }
 })
 
