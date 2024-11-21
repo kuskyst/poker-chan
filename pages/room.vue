@@ -107,13 +107,8 @@ const draw = (card: number) => {
 const reset = () => { send('{ "reset": true }') }
 const reveal = () => { send('{ "reveal": true }') }
 
-const onDrag = (score: number, event: any) => {
-  event.dataTransfer.setData('score', JSON.stringify(score))
-}
-
-const onDrop = (event: any) => {
-  play(JSON.parse(event.dataTransfer.getData('score')))
-}
+const onDrag = (score: number, event: any) => event.dataTransfer.setData('score', JSON.stringify(score))
+const onDrop = (event: any) => play(event.dataTransfer.getData('score'))
 
 const votesStyle = (index: number): StyleValue => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
