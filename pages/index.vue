@@ -1,10 +1,10 @@
 <template>
   <div height="100vh">
     <div width="80%" class="bg-teal-accent-3 text-white pt-3 pl-3 pr-3">
-      <v-text-field bg-color="white" label="title" variant="solo" clearable />
+      <v-text-field append-inner-icon="mdi-check-bold" v-model="title" bg-color="white" label="title" variant="solo" clearable @click:append-inner="sendMessage('title', title)" />
       <v-row justify="center" align-items="center">
         <v-col cols="4">
-          <v-text-field bg-color="white" label="your name" variant="solo" v-model="yourName" />
+          <v-text-field append-inner-icon="mdi-check-bold" v-model="yourName" bg-color="white" label="your name" variant="solo" @click:append-inner="sendMessage('name', yourName)" />
         </v-col>
         <v-col class="text-truncate">members: {{ members.join(', ') }}</v-col>
       </v-row>
@@ -54,55 +54,78 @@
         </v-col>
       </v-row>
     </v-container>
+    {{ status }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, type StyleValue } from 'vue';
+import { ref, type StyleValue } from 'vue'
+import { useWebSocket } from '@vueuse/core'
 
-const yourName = ref('名無しちゃん');
-const members = ref(['名無しちゃん1', '名無しちゃん2', '名無しちゃん3', '名無しちゃん4', '名無しちゃん5', '名無しちゃん6']);
-const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]);
-const score = ref();
-const votes = ref<number[]>([]);;
-const average = ref(0);
-const isReveal = ref(false);
-const drawScore = ref(10);
+const id = useRoute().query.id as string
+const { data, send, status, close } = useWebSocket<MessageEvent>(`wss://poker-chan-api-production.up.railway.app/ws?id=${id}`, { autoReconnect: true })
+
+const title = ref('')
+const yourName = ref('匿名ちゃん')
+const members = ref([])
+const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100])
+const score = ref()
+const votes = ref<number[]>([])
+const average = ref(0)
+const isReveal = ref(false)
+const drawScore = ref(10)
+
+watch(data, (message) => {
+  if (message) {
+    const res = JSON.parse(message.toString())
+    title.value = res.title
+    members.value = res.members.map((member: any) => member.name)
+    votes.value = Object.values(res.votes)
+    isReveal.value =res.reveal
+  }
+});
+
+
+const sendMessage = (key: string, value: any) => {
+  send(`{ "${key}": "${value}" }`)
+};
 
 const play = (card: number) => {
-  if (!isReveal.value && !isNaN(card) && members.value.length != votes.value.length) {
-    votes.value.push(card);
-    score.value = card;
+  if (!isReveal.value && !isNaN(card)) {
+    score.value = card
+    sendMessage("vote", String(score.value))
   }
 }
 const draw = (card: number) => {
   if (!hands.value.includes(card)) {
-    hands.value.push(card);
-    hands.value.sort((a, b) => a - b);
+    hands.value.push(card)
+    hands.value.sort((a, b) => a - b)
   }
 }
 const reset = () => {
-  isReveal.value = false;
-  votes.value.splice(0);
-  average.value = 0;
+  isReveal.value = false
+  votes.value.splice(0)
+  average.value = 0
+  send('{ "reset": true }')
 }
 const reveal = () => {
-  isReveal.value = true;
-  average.value = votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length;
+  send('{ "reveal": true }')
+  isReveal.value = true
+  average.value = votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length
 };
 
 const onDrag = (score: number, event: any) => {
-  event.dataTransfer.setData('score', JSON.stringify(score));
+  event.dataTransfer.setData('score', JSON.stringify(score))
 };
 
 const onDrop = (event: any) => {
-  play(JSON.parse(event.dataTransfer.getData('score')));
+  play(JSON.parse(event.dataTransfer.getData('score')))
 };
 
 const votesStyle = (index: number): StyleValue => {
-  const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
-  const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50;
-  const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180;
+  const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
+  const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
+  const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180
   return !isReveal.value ?
     {
       top: `${random1}%`,
@@ -116,6 +139,6 @@ const votesStyle = (index: number): StyleValue => {
     {
       transition: 'all 1s ease',
       transform: 'rotate(0deg) translate(0%, 0%)',
-    };
-};
+    }
+}
 </script>
