@@ -79,9 +79,9 @@ watch(data, (message) => {
   if (message) {
     const res = JSON.parse(message.toString())
     title.value = res.title
+    isReveal.value = res.reveal
     members.value = res.members.map((member: any) => member.name)
-    votes.value = Object.values(res.votes).map((score: any) => parseFloat(score));
-    isReveal.value =res.reveal
+    votes.value = Object.values(res.votes).map((score: any) => parseFloat(score))
     average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
   }
 })
