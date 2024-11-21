@@ -27,7 +27,7 @@
               'mb-1': isReveal
             }"
           />
-          {{ isReveal ? members[index] : '' }}
+          {{ isReveal ? voter[index] : '' }}
         </div>
       </v-sheet>
 
@@ -71,17 +71,27 @@ const members = ref([])
 const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100])
 const score = ref()
 const votes = ref<number[]>([])
+const voter = ref<string[]>([])
 const average = ref(0)
 const isReveal = ref(false)
 const drawScore = ref(10)
 
 watch(data, (message) => {
   if (message) {
+    voter.value = []
     const res = JSON.parse(message.toString())
     title.value = res.title
     isReveal.value = res.reveal
     members.value = res.members.map((member: any) => member.name)
     votes.value = Object.values(res.votes).map((score: any) => parseFloat(score))
+    if (res.reveal) {
+      Object.keys(res.votes).forEach(uuid => {
+      const member = res.members.find((m: any) => m.uuid === uuid);
+      if (member) {
+        voter.value.push(member.name);
+      }
+    });
+    }
     average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
   }
 })
