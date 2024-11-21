@@ -18,7 +18,6 @@
       <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="45vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
         <div class="ma-1 text-white" v-for="(vote, index) in votes" :key="index" :style="votesStyle(index)">
-          {{ isReveal ? members[index] : '' }}
           <score-card
             :open="isReveal"
             :score="vote"
@@ -28,6 +27,7 @@
               'mt-1': isReveal
             }"
           />
+          {{ isReveal ? members[index] : '' }}
         </div>
       </v-sheet>
 
@@ -63,7 +63,7 @@ import { ref, type StyleValue } from 'vue'
 import { useWebSocket } from '@vueuse/core'
 
 const id = useRoute().query.id as string
-const { data, send, status, close } = useWebSocket<MessageEvent>(`wss://poker-chan-api-production.up.railway.app/ws?id=${id}`, { autoReconnect: true })
+const { data, send, status } = useWebSocket<MessageEvent>(`wss://poker-chan-api-production.up.railway.app/ws?id=${id}`, { autoReconnect: true })
 
 const title = ref('')
 const yourName = ref('匿名ちゃん')
@@ -78,22 +78,17 @@ const drawScore = ref(10)
 watch(data, (message) => {
   if (message) {
     const res = JSON.parse(message.toString())
-    console.log(res)
     title.value = res.title
     members.value = res.members.map((member: any) => member.name)
     votes.value = Object.values(res.votes).map((score: any) => parseFloat(score));
     isReveal.value =res.reveal
-    if (isReveal) {
-      average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
-
-    }
+    average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
   }
-});
-
+})
 
 const sendMessage = (key: string, value: any) => {
   send(`{ "${key}": "${value}" }`)
-};
+}
 
 sendMessage('name', yourName.value)
 
@@ -109,23 +104,16 @@ const draw = (card: number) => {
     hands.value.sort((a, b) => a - b)
   }
 }
-const reset = () => {
-  isReveal.value = false
-  votes.value.splice(0)
-  average.value = 0
-  send('{ "reset": true }')
-}
-const reveal = () => {
-  send('{ "reveal": true }')
-};
+const reset = () => { send('{ "reset": true }') }
+const reveal = () => { send('{ "reveal": true }')}
 
 const onDrag = (score: number, event: any) => {
   event.dataTransfer.setData('score', JSON.stringify(score))
-};
+}
 
 const onDrop = (event: any) => {
   play(JSON.parse(event.dataTransfer.getData('score')))
-};
+}
 
 const votesStyle = (index: number): StyleValue => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
