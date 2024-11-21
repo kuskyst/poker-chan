@@ -24,7 +24,7 @@
             :class="{
               'bg-red-lighten-4': isReveal && Math.min(...votes.filter(v => v > 0)) == vote,
               'bg-blue-lighten-4': isReveal && Math.max(...votes) == vote,
-              'mt-1': isReveal
+              'mb-1': isReveal
             }"
           />
           {{ isReveal ? members[index] : '' }}
