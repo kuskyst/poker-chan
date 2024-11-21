@@ -9,9 +9,9 @@
         <v-col class="text-truncate">members: {{ members.join(', ') }}</v-col>
       </v-row>
       Vote: {{ votes.length }} / {{ members.length }}
-      <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="members.length != votes.length">Reveal</v-btn>
+      <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="isReveal || members.length != votes.length">Reveal</v-btn>
       <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="votes.length == 0">Reset</v-btn>
-      Average: {{ average > 0 ? Math.floor((average) * 100) / 100 : '??' }}
+      Average: {{ isReveal && average > 0 ? average : '??' }}
     </div>
 
     <v-container>
@@ -78,10 +78,15 @@ const drawScore = ref(10)
 watch(data, (message) => {
   if (message) {
     const res = JSON.parse(message.toString())
+    console.log(res)
     title.value = res.title
     members.value = res.members.map((member: any) => member.name)
-    votes.value = Object.values(res.votes)
+    votes.value = Object.values(res.votes).map((score: any) => parseFloat(score));
     isReveal.value =res.reveal
+    if (isReveal) {
+      average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
+
+    }
   }
 });
 
@@ -89,6 +94,8 @@ watch(data, (message) => {
 const sendMessage = (key: string, value: any) => {
   send(`{ "${key}": "${value}" }`)
 };
+
+sendMessage('name', yourName.value)
 
 const play = (card: number) => {
   if (!isReveal.value && !isNaN(card)) {
@@ -110,8 +117,6 @@ const reset = () => {
 }
 const reveal = () => {
   send('{ "reveal": true }')
-  isReveal.value = true
-  average.value = votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length
 };
 
 const onDrag = (score: number, event: any) => {
