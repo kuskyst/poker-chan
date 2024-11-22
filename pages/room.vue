@@ -39,7 +39,8 @@
             :open="true"
             :score="hand"
             @dragstart="onDrag(hand, $event)"
-            @dblclick="play(hand)"
+            @click="play(hand)"
+             :ripple="{ class: 'bg-green-accent-1' }"
             :class="{
               'bg-green-accent-2': score == hand,
               'text-white': score == hand
@@ -86,11 +87,14 @@ watch(data, (message) => {
     votes.value = Object.values(res.votes).map((score: any) => parseFloat(score))
     if (res.reveal) {
       Object.keys(res.votes).forEach(uuid => {
-      const member = res.members.find((m: any) => m.uuid === uuid);
-      if (member) {
-        voter.value.push(member.name);
-      }
-    });
+        const member = res.members.find((m: any) => m.uuid === uuid);
+        if (member) {
+          voter.value.push(member.name);
+        }
+      });
+    }
+    if (votes.value.length <= 0) {
+      score.value = 0
     }
     average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
   }
