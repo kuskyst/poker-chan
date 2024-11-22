@@ -25,6 +25,9 @@
         </v-col>
         <v-col class="text-truncate text-body-1">members: {{ members.join(', ') }}</v-col>
       </v-row>
+      <v-icon class="ma-3" v-if="status === 'CLOSED'" icon="mdi-connection" />
+      <v-icon class="ma-3" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
+      <v-icon class="ma-3" v-else icon="mdi-transit-connection-variant" />
       Vote: {{ votes.length }} / {{ members.length }}
       <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="isReveal || members.length != votes.length">Reveal</v-btn>
       <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="votes.length == 0">Reset</v-btn>
@@ -72,7 +75,6 @@
         </v-col>
       </v-row>
     </v-container>
-    {{ status }}
   </div>
 </template>
 
