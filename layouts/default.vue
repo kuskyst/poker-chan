@@ -1,5 +1,5 @@
 <template>
-  <v-app class="bg-teal-accent-3">
+  <v-app>
     <Transition>
       <slot/>
     </Transition>
