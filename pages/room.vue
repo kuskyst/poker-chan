@@ -1,12 +1,12 @@
 <template>
   <div height="100vh">
-    <div width="80%" class="bg-teal-accent-3 text-white pt-3 pl-3 pr-3 text-h6">
+    <div width="80%" class="bg-teal-accent-3 text-grey-darken-2 pt-3 pl-3 pr-3 text-h6">
       <v-text-field append-inner-icon="mdi-check-bold" v-model="title" bg-color="white" label="title" variant="solo" clearable @click:append-inner="sendMessage('title', title)" />
       <v-row justify="center" align-items="center">
         <v-col cols="4">
           <v-text-field append-inner-icon="mdi-check-bold" v-model="yourName" bg-color="white" label="your name" variant="solo" @click:append-inner="sendMessage('name', yourName)" />
         </v-col>
-        <v-col class="text-truncate">members: {{ members.join(', ') }}</v-col>
+        <v-col class="text-truncate text-body-1">members: {{ members.join(', ') }}</v-col>
       </v-row>
       Vote: {{ votes.length }} / {{ members.length }}
       <v-btn color="blue" class="ma-3" @click="reveal" prepend-icon="mdi-send" :disabled="isReveal || members.length != votes.length">Reveal</v-btn>
@@ -15,7 +15,7 @@
     </div>
 
     <v-container>
-      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="45vh">
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="48vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
         <div class="ma-1 text-white" v-for="(vote, index) in votes" :key="index" :style="votesStyle(index)">
           <score-card
