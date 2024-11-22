@@ -1,10 +1,27 @@
 <template>
   <div height="100vh">
     <div width="80%" class="bg-teal-accent-3 text-grey-darken-2 pt-3 pl-3 pr-3 text-h6">
-      <v-text-field append-inner-icon="mdi-check-bold" v-model="title" bg-color="white" label="title" variant="solo" clearable @click:append-inner="sendMessage('title', title)" />
+      <v-text-field
+        append-inner-icon="mdi-check-bold"
+        v-model="title"
+        bg-color="white"
+        label="title"
+        variant="solo"
+        clearable
+        @blur="sendMessage('title', title)"
+        @click:append-inner="sendMessage('title', title)"
+      />
       <v-row justify="center" align-items="center">
         <v-col cols="4">
-          <v-text-field append-inner-icon="mdi-check-bold" v-model="yourName" bg-color="white" label="your name" variant="solo" @click:append-inner="sendMessage('name', yourName)" />
+          <v-text-field
+            append-inner-icon="mdi-check-bold"
+            v-model="yourName"
+            bg-color="white"
+            label="your name"
+            variant="solo"
+            @blur="sendMessage('name', yourName)"
+            @click:append-inner="sendMessage('name', yourName)"
+          />
         </v-col>
         <v-col class="text-truncate text-body-1">members: {{ members.join(', ') }}</v-col>
       </v-row>
