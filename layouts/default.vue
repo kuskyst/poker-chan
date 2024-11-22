@@ -1,6 +1,8 @@
 <template>
-  <v-app>
-    <slot/>
+  <v-app class="bg-teal-accent-3">
+    <Transition>
+      <slot/>
+    </Transition>
   </v-app>
 </template>
 
@@ -11,5 +13,19 @@ html, body {
   height: 100vh;
   overflow: hidden;
   user-select: none;
+}
+.v-enter-active {
+    transition: opacity 2s;
+}
+.v-enter-active {
+    transition: opacity 2s reverse;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.v-enter-to,
+.v-leave-from {
+  opacity: 1;
 }
 </style>
