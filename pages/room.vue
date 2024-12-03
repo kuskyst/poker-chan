@@ -60,7 +60,7 @@
             :score="hand"
             @dragstart="onDrag(hand, $event)"
             @click="play(hand)"
-             :ripple="{ class: 'bg-green-accent-1' }"
+            :ripple="{ class: 'bg-green-accent-1' }"
             :class="{
               'bg-green-accent-2': score == hand,
               'text-white': score == hand
@@ -70,7 +70,7 @@
         <v-col>
           <v-card height="130" width="90" class="ma-1">
             <v-number-input flat hide-details inset v-model="drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
-            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)">draw</v-btn>
+            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
           </v-card>
         </v-col>
       </v-row>
