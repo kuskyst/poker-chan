@@ -3,13 +3,13 @@
     <div width="80%" class="bg-teal-accent-3 text-grey-darken-2 pt-3 pl-3 pr-3 text-h6">
       <v-text-field
         append-inner-icon="mdi-check-bold"
-        v-model="title"
+        v-model="room.title"
         bg-color="white"
         label="title"
         variant="solo"
         clearable
-        @blur="sendMessage('title', title)"
-        @click:append-inner="sendMessage('title', title)"
+        @blur="sendMessage('title', room?.title)"
+        @click:append-inner="sendMessage('title', room?.title)"
       />
       <v-row justify="center" align-items="center">
         <v-col cols="4">
@@ -23,31 +23,32 @@
             @click:append-inner="sendMessage('name', yourName)"
           />
         </v-col>
-        <v-col class="text-truncate text-body-1">members: {{ members.join(', ') }}</v-col>
+        <v-col class="text-truncate text-body-1">members: {{ room?.members.map((member) => member.name).join(', ') }}</v-col>
       </v-row>
       <v-icon class="ml-3 mr-3" v-if="status === 'CLOSED'" icon="mdi-connection" />
       <v-icon class="ml-3 mr-3" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
       <v-icon class="ml-3 mr-3" v-else icon="mdi-transit-connection-variant" />
-      Vote: {{ votes.length }} / {{ members.length }}
-      <v-btn color="blue" class="ml-3 mr-3" @click="reveal" prepend-icon="mdi-send" :disabled="isReveal || members.length != votes.length">Reveal</v-btn>
-      <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="votes.length == 0">Reset</v-btn>
-      Average: {{ isReveal && average > 0 ? average : '??' }}
+      Vote: {{ Object.keys(room?.votes ?? {}).length }} / {{ room?.members.length }}
+      <v-btn color="blue" class="ml-3 mr-3" @click="reveal" prepend-icon="mdi-send" :disabled="room?.reveal || room?.members.length != Object.keys(room?.votes ?? {}).length">Reveal</v-btn>
+      <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes ?? {}).length == 0">Reset</v-btn>
+      Average: {{ room?.reveal ? (Object.values(room?.votes ?? {}).map(parseFloat)
+        .reduce((sum, element) => sum + element, 0)) / Object.values(room?.votes ?? {}).filter(v => v > 0).length : '??' }}
     </div>
 
     <v-container>
       <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="48vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
-        <div class="ma-1 text-white" v-for="(vote, index) in votes" :key="index" :style="votesStyle(index)">
+        <div class="ma-1 text-white" v-for="([uuid, vote], index) in Object.entries(room?.votes ?? {})" :key="uuid" :style="votesStyle(index)">
           <score-card
-            :open="isReveal"
+            :open="room?.reveal ?? false"
             :score="vote"
             :class="{
-              'bg-red-lighten-4': isReveal && Math.min(...votes.filter(v => v > 0)) == vote,
-              'bg-blue-lighten-4': isReveal && Math.max(...votes) == vote,
-              'mb-1': isReveal
+              'bg-red-lighten-4': room?.reveal && Math.min(...Object.values(room?.votes).filter(v => v > 0)) == vote,
+              'bg-blue-lighten-4': room?.reveal && Math.max(...Object.values(room?.votes)) == vote,
+              'mb-1': room?.reveal
             }"
           />
-          {{ isReveal ? voter[index] : '' }}
+          {{ room?.reveal ? room.members.filter(v => v.uuid === uuid.toString())[0]?.name : '' }}
         </div>
       </v-sheet>
 
@@ -81,41 +82,28 @@
 <script setup lang="ts">
 import { ref, type StyleValue } from 'vue'
 import { useWebSocket } from '@vueuse/core'
+import type { Room } from '~/api/entity/response'
 
 const id = useRoute().query.id as string
 const { data, send, status } = useWebSocket<MessageEvent>(`wss://poker-chan-api-production.up.railway.app/ws?id=${id}`, { autoReconnect: true })
 
-const title = ref('')
 const yourName = ref('匿名ちゃん')
-const members = ref([])
 const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100])
 const score = ref()
-const votes = ref<number[]>([])
-const voter = ref<string[]>([])
 const average = ref(0)
-const isReveal = ref(false)
 const drawScore = ref(10)
 
+const room = ref<Room>({ title: '', members: [], votes: new Map<string, number>(), reveal: false })
+
 watch(data, (message) => {
+  console.log(message)
   if (message) {
-    voter.value = []
-    const res = JSON.parse(message.toString())
-    title.value = res.title
-    isReveal.value = res.reveal
-    members.value = res.members.map((member: any) => member.name)
-    votes.value = Object.values(res.votes).map((score: any) => parseFloat(score))
-    if (res.reveal) {
-      Object.keys(res.votes).forEach(uuid => {
-        const member = res.members.find((m: any) => m.uuid === uuid);
-        if (member) {
-          voter.value.push(member.name);
-        }
-      });
-    }
-    if (votes.value.length <= 0) {
+    room.value = JSON.parse(message.toString())
+    if (Object.keys(room?.value?.votes ?? {}).length <= 0) {
       score.value = 0
     }
-    average.value = (votes.value.filter(v => v > 0).reduce((sum, element) => sum + element, 0) / votes.value.filter(v => v > 0).length)
+    average.value = (Object.values(room?.value?.votes ?? {}).map(parseFloat)
+      .reduce((sum, element) => sum + element, 0)) / Object.values(room?.value?.votes ?? {}).filter(v => v > 0).length
   }
 })
 
@@ -126,7 +114,7 @@ const sendMessage = (key: string, value: any) => {
 sendMessage('name', yourName.value)
 
 const play = (card: number) => {
-  if (!isReveal.value && !isNaN(card)) {
+  if (!room.value?.reveal && !isNaN(card)) {
     score.value = card
     sendMessage("vote", String(score.value))
   }
@@ -147,7 +135,7 @@ const votesStyle = (index: number): StyleValue => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
   const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
   const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180
-  return !isReveal.value ?
+  return !room.value?.reveal ?
     {
       top: `${random1}%`,
       left: `${random2}%`,
