@@ -23,7 +23,7 @@
             @click:append-inner="sendMessage('name', yourName)"
           />
         </v-col>
-        <v-col class="text-truncate text-body-1">members: {{ room?.members.map((member) => member.name).join(', ') }}</v-col>
+        <v-col class="text-truncate text-body-1">members: {{ room?.members.map((member) => member.name).sort().join(', ') }}</v-col>
       </v-row>
       <v-icon class="ml-3 mr-3" v-if="status === 'CLOSED'" icon="mdi-connection" />
       <v-icon class="ml-3 mr-3" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
