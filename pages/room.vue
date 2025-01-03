@@ -96,7 +96,6 @@ const drawScore = ref(10)
 const room = ref<Room>({ title: '', members: [], votes: new Map<string, number>(), reveal: false })
 
 watch(data, (message) => {
-  console.log(message)
   if (message) {
     room.value = JSON.parse(message.toString())
     if (Object.keys(room?.value?.votes ?? {}).length <= 0) {
