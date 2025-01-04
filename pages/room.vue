@@ -28,19 +28,19 @@
       <v-icon class="ml-3 mr-3" v-if="status === 'CLOSED'" icon="mdi-connection" />
       <v-icon class="ml-3 mr-3" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
       <v-icon class="ml-3 mr-3" v-else icon="mdi-transit-connection-variant" />
-      Vote: {{ Object.keys(room?.votes ?? {}).length }} / {{ room?.members.length }}
-      <v-btn color="blue" class="ml-3 mr-3" @click="reveal" prepend-icon="mdi-send" :disabled="room?.reveal || room?.members.length != Object.keys(room?.votes ?? {}).length">Reveal</v-btn>
-      <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes ?? {}).length == 0">Reset</v-btn>
-      Average: {{ room?.reveal ? (Object.values(room?.votes ?? {}).map(parseFloat)
-        .reduce((sum, element) => sum + element, 0)) / Object.values(room?.votes ?? {}).filter(v => v > 0).length : '??' }}
+      Vote: {{ Object.keys(room?.votes).length }} / {{ room?.members.length }}
+      <v-btn color="blue" class="ml-3 mr-3" @click="reveal" prepend-icon="mdi-send" :disabled="room?.reveal || room?.members.length != Object.keys(room?.votes).length">Reveal</v-btn>
+      <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
+      Average: {{ room?.reveal ? (Object.values(room?.votes).map(parseFloat)
+        .reduce((sum, element) => sum + element, 0)) / Object.values(room?.votes).filter(v => v > 0).length : '??' }}
     </div>
 
     <v-container>
       <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="48vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
-        <div class="ma-1 text-white" v-for="([uuid, vote], index) in Object.entries(room?.votes ?? {})" :key="uuid" :style="votesStyle(index)">
+        <div class="ma-1 text-white" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
           <score-card
-            :open="room?.reveal ?? false"
+            :open="room?.reveal"
             :score="vote"
             :class="{
               'bg-red-lighten-4': room?.reveal && Math.min(...Object.values(room?.votes).filter(v => v > 0)) == vote,
@@ -99,11 +99,11 @@ const room = ref<Room>({ title: '', members: [], votes: new Map<string, number>(
 watch(data, (message) => {
   if (message) {
     room.value = JSON.parse(message.toString())
-    if (Object.keys(room?.value?.votes ?? {}).length <= 0) {
+    if (Object.keys(room?.value?.votes).length <= 0) {
       score.value = 0
     }
-    average.value = (Object.values(room?.value?.votes ?? {}).map(parseFloat)
-      .reduce((sum, element) => sum + element, 0)) / Object.values(room?.value?.votes ?? {}).filter(v => v > 0).length
+    average.value = (Object.values(room?.value?.votes).map(parseFloat)
+      .reduce((sum, element) => sum + element, 0)) / Object.values(room?.value?.votes).filter(v => v > 0).length
   }
 })
 
