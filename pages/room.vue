@@ -8,8 +8,8 @@
         label="title"
         variant="solo"
         clearable
-        @blur="sendMessage('title', room?.title)"
-        @click:append-inner="sendMessage('title', room?.title)"
+        @blur="sendMessage({title: room?.title})"
+        @click:append-inner="sendMessage({title: room?.title})"
       />
       <v-row justify="center" align-items="center">
         <v-col cols="4">
@@ -19,8 +19,8 @@
             bg-color="white"
             label="your name"
             variant="solo"
-            @blur="sendMessage('name', yourName)"
-            @click:append-inner="sendMessage('name', yourName)"
+            @blur="sendMessage({name: yourName})"
+            @click:append-inner="sendMessage({name: yourName})"
           />
         </v-col>
         <v-col class="text-truncate text-body-1">members: {{ room?.members.map((member) => member.name).sort().join(', ') }}</v-col>
@@ -83,6 +83,7 @@
 import { ref, type StyleValue } from 'vue'
 import { useWebSocket } from '@vueuse/core'
 import type { Room } from '~/api/entity/response'
+import type { Message } from '~/api/entity/request'
 
 const id = useRoute().query.id as string
 const { data, send, status } = useWebSocket<MessageEvent>(`wss://poker-chan-api-production.up.railway.app/ws?id=${id}`, { autoReconnect: true })
@@ -106,16 +107,16 @@ watch(data, (message) => {
   }
 })
 
-const sendMessage = (key: string, value: any) => {
-  send(`{ "${key}": "${value}" }`)
+const sendMessage = (message: Message) => {
+  send(JSON.stringify(message))
 }
 
-sendMessage('name', yourName.value)
+sendMessage({name: yourName.value})
 
 const play = (card: number) => {
   if (!room.value?.reveal && !isNaN(card)) {
     score.value = card
-    sendMessage("vote", String(score.value))
+    sendMessage({vote: String(score.value)})
   }
 }
 const draw = (card: number) => {
@@ -124,8 +125,8 @@ const draw = (card: number) => {
     hands.value.sort((a, b) => a - b)
   }
 }
-const reset = () => { send('{ "reset": true }') }
-const reveal = () => { send('{ "reveal": true }') }
+const reset = () => { sendMessage({reset: true}) }
+const reveal = () => { sendMessage({reveal: true}) }
 
 const onDrag = (score: number, event: any) => event.dataTransfer.setData('score', JSON.stringify(score))
 const onDrop = (event: any) => play(event.dataTransfer.getData('score'))
