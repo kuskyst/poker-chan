@@ -91,7 +91,6 @@ const { data, send, status } = useWebSocket<MessageEvent>(`wss://poker-chan-api-
 const yourName = ref('匿名ちゃん')
 const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100])
 const score = ref()
-const average = ref(0)
 const drawScore = ref(10)
 
 const room = ref<Room>({ title: '', members: [], votes: new Map<string, number>(), reveal: false })
@@ -102,8 +101,6 @@ watch(data, (message) => {
     if (Object.keys(room?.value?.votes).length <= 0) {
       score.value = 0
     }
-    average.value = (Object.values(room?.value?.votes).map(parseFloat)
-      .reduce((sum, element) => sum + element, 0)) / Object.values(room?.value?.votes).filter(v => v > 0).length
   }
 })
 
