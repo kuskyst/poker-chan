@@ -7,6 +7,7 @@
 | Architecture | Clean Architecture ? |
 | UI Component | Vuetify 3 |
 | Asynchronous | vueuse/core (useWebSocket) |
+| Test | Jest |
 
 ## Project setup
 ```
