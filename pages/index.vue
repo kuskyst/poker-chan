@@ -1,13 +1,13 @@
 <template>
   <div class="bg-teal-accent-3">
-  <v-container height="100vh" width="80vw" class="ma-auto">
+  <v-container height="100vh" class="ma-auto">
     <v-col class="text-center">
-      <v-btn append-icon="mdi-home-plus" class="mb-4" width="50%" @click="createRoom">Create new Room</v-btn>
+      <v-btn append-icon="mdi-home-plus" class="mb-4" width="80%" @click="createRoom">Create new Room</v-btn>
     </v-col>
     <v-col>
       <v-text-field
         class="ma-auto"
-        width="50%"
+        width="80%"
         append-inner-icon="mdi-home-import-outline"
         v-model="roomID"
         bg-color="white"
