@@ -36,9 +36,10 @@
     </div>
 
     <v-container>
-      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="48vh">
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="45vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
-        <div class="ma-1 text-grey-darken-2" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
+        <v-row justify="start" style="max-height: calc(var(--v-space-md) * 2); overflow-x: auto;">
+        <v-col cols="auto" class="text-grey-darken-2" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
           <score-card
             :open="room?.reveal"
             :score="vote"
@@ -49,7 +50,8 @@
             }"
           />
           {{ room?.reveal ? room.members.filter(v => v.uuid === uuid.toString())[0]?.name : '' }}
-        </div>
+        </v-col>
+      </v-row>
       </v-sheet>
 
       <v-row class="ml-1 overflow-x-scroll flex-nowrap">
