@@ -25,33 +25,33 @@
         </v-col>
         <v-col class="text-truncate text-body-1">members: {{ room?.members.map((member) => member.name).sort().join(', ') }}</v-col>
       </v-row>
-      <v-icon class="ml-3 mr-3" v-if="status === 'CLOSED'" icon="mdi-connection" />
-      <v-icon class="ml-3 mr-3" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
-      <v-icon class="ml-3 mr-3" v-else icon="mdi-transit-connection-variant" />
+      <v-icon class="ml-2 mr-2" v-if="status === 'CLOSED'" icon="mdi-connection" />
+      <v-icon class="ml-2 mr-2" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
+      <v-icon class="ml-2 mr-2" v-else icon="mdi-transit-connection-variant" />
       Vote: {{ Object.keys(room?.votes).length }} / {{ room?.members.length }}
-      <v-btn color="blue" class="ml-3 mr-3" @click="reveal" prepend-icon="mdi-send" :disabled="room?.reveal || room?.members.length != Object.keys(room?.votes).length">Reveal</v-btn>
-      <v-btn color="red" class="ma-3" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
-      Average: {{ room?.reveal ? (Object.values(room?.votes).map(parseFloat)
+      <v-btn color="blue" class="ml-2 mr-2" @click="reveal" prepend-icon="mdi-send" :disabled="room?.reveal || room?.members.length != Object.keys(room?.votes).length">Reveal</v-btn>
+      <v-btn color="red" class="ma-2" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
+      Average: {{ room?.reveal ? (Object.values(room?.votes).filter(v => v > 0).map(parseFloat)
         .reduce((sum, element) => sum + element, 0)) / Object.values(room?.votes).filter(v => v > 0).length : '??' }}
     </div>
 
     <v-container>
-      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="45vh">
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="46vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
-        <v-row justify="start" style="max-height: calc(var(--v-space-md) * 2); overflow-x: auto;">
-        <v-col cols="auto" class="text-grey-darken-2" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
-          <score-card
-            :open="room?.reveal"
-            :score="vote"
-            :class="{
-              'bg-red-lighten-4': room?.reveal && Math.min(...Object.values(room?.votes).filter(v => v > 0)) == vote,
-              'bg-blue-lighten-4': room?.reveal && Math.max(...Object.values(room?.votes)) == vote,
-              'mb-1': room?.reveal
-            }"
-          />
-          {{ room?.reveal ? room.members.filter(v => v.uuid === uuid.toString())[0]?.name : '' }}
-        </v-col>
-      </v-row>
+        <v-row justify="start" style="max-height: calc(var(--v-space-md) * 2)" class="overflow-x-auto">
+          <v-col cols="auto" class="text-white" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
+            <score-card
+              :open="room?.reveal"
+              :score="vote"
+              :class="{
+                'bg-red-lighten-4': room?.reveal && Math.min(...Object.values(room?.votes).filter(v => v > 0)) == vote,
+                'bg-blue-lighten-4': room?.reveal && Math.max(...Object.values(room?.votes)) == vote,
+                'mb-1': room?.reveal
+              }"
+            />
+            {{ room?.reveal ? room.members.filter(v => v.uuid === uuid.toString())[0]?.name : '' }}
+          </v-col>
+        </v-row>
       </v-sheet>
 
       <v-row class="ml-1 overflow-x-scroll flex-nowrap">
