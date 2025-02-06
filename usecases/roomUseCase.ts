@@ -9,6 +9,7 @@ const hands = ref([-1, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100])
 const score = ref()
 const average = ref(0)
 const drawScore = ref(10)
+const dialog = ref(false)
 
 let repository: ReturnType<typeof useWebSocketRepository>
 const status = ref('connectining')
@@ -29,6 +30,7 @@ const initialize = (id: string) => {
       room.value = JSON.parse(message.toString())
       if (Object.keys(room?.value?.votes).length <= 0) {
         score.value = 0
+        dialog.value = false
       }
       average.value = (Object.values(room?.value?.votes).map(parseFloat)
         .reduce((sum, element) => sum + element, 0)) / Object.values(room?.value?.votes).filter(v => v > 0).length
@@ -54,8 +56,8 @@ const draw = (card: number) => {
   }
 }
 
-const reset = () => { sendMessage({ reset: true }) }
-const reveal = () => { sendMessage({ reveal: true }) }
+const reset = () => sendMessage({ reset: true })
+const reveal = () => sendMessage({ reveal: true })
 
 const votesStyle = (index: number): StyleValue => {
   const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
@@ -91,5 +93,6 @@ export {
   reset,
   reveal,
   status,
+  dialog,
   initialize
 }

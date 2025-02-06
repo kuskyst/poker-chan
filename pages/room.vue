@@ -1,6 +1,6 @@
 <template>
   <div height="100vh">
-    <div width="80%" class="bg-teal-accent-3 text-grey-darken-2 pt-3 pl-3 pr-3 text-h6">
+    <div width="80%" class="bg-teal-accent-3 text-grey-darken-2 pt-2 pl-3 pr-3 text-h6">
       <v-text-field
         append-inner-icon="mdi-check-bold"
         v-model="room.title"
@@ -29,14 +29,22 @@
       <v-icon class="ml-2 mr-2" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
       <v-icon class="ml-2 mr-2" v-else icon="mdi-transit-connection-variant" />
       Vote: {{ Object.keys(room?.votes).length }} / {{ room?.members.length }}
-      <v-btn color="blue" class="ml-2 mr-2" @click="reveal" prepend-icon="mdi-send" :disabled="room?.reveal || room?.members.length != Object.keys(room?.votes).length">Reveal</v-btn>
-      <v-btn color="red" class="ma-2" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
+      <v-btn
+        color="blue"
+        class="mb-2 ml-2 mr-2"
+        @click="room?.members.length > Object.keys(room?.votes).length ? dialog = true : reveal()"
+        prepend-icon="mdi-send"
+        :disabled="room?.reveal || Object.keys(room?.votes).length == 0"
+      >
+        Reveal
+      </v-btn>
+      <v-btn color="red" class="mb-2 ml-2 mr-2" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
       Average: {{ room?.reveal ? (Object.values(room?.votes).filter(v => v > 0).map(parseFloat)
         .reduce((sum, element) => sum + element, 0)) / Object.values(room?.votes).filter(v => v > 0).length : '??' }}
     </div>
 
-    <v-container>
-      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="46vh">
+    <v-container class="pt-2">
+      <v-sheet class="d-flex" @drop.prevent="onDrop" @dragover.prevent border="xl" rounded="xl" color="green-lighten-2 position-relative" width="100%" height="50vh">
         <v-card class="position-absolute top-0 left-0 bottom-0 right-0 bg-transparent ma-auto" border="surface-light lg" rounded="xl" width="70%" height="70%" />
         <v-row justify="start" style="max-height: calc(var(--v-space-md) * 2)" class="overflow-x-auto">
           <v-col cols="auto" class="text-white" v-for="([uuid, vote], index) in Object.entries(room?.votes)" :key="uuid" :style="votesStyle(index)">
@@ -54,7 +62,7 @@
         </v-row>
       </v-sheet>
 
-      <v-row class="ml-1 overflow-x-scroll flex-nowrap">
+      <v-row class="pt-2 overflow-x-scroll flex-nowrap">
         <v-col v-for="(hand, index) in hands" :key="index" cols="auto" class="d-flex justify-center">
           <score-card
             draggable="true"
@@ -78,6 +86,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <confirm-dialog :show="dialog" @update:show="dialog = $event" :open="reveal" />
   </div>
 </template>
 
@@ -96,6 +105,7 @@ import {
   reset,
   reveal,
   status,
+  dialog,
   initialize
 } from '~/usecases/roomUseCase'
 
