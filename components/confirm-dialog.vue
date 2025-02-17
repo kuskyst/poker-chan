@@ -10,7 +10,7 @@
       <v-card-actions class="mx-auto">
         <v-btn color="blue" @click="visible = false" class="font-weight-bold">Cancel</v-btn>
         <v-spacer />
-        <v-btn color="red" @click="visible = false;open();" class="font-weight-bold">Open</v-btn>
+        <v-btn color="red" @click="visible = false;open();" class="font-weight-bold">Reveal</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
