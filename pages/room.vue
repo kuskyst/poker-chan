@@ -33,7 +33,7 @@
         color="blue"
         class="mb-2 ml-2 mr-2"
         @click="room?.members.length > Object.keys(room?.votes).length ? dialog = true : reveal()"
-        prepend-icon="mdi-send"
+        prepend-icon="mdi-cards-playing"
         :disabled="room?.reveal || Object.keys(room?.votes).length == 0"
       >
         Reveal
