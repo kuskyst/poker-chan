@@ -15,24 +15,24 @@
         <v-col cols="4">
           <v-text-field
             append-inner-icon="mdi-check-bold"
-            v-model="yourName"
+            v-model="player.name"
             bg-color="white"
             label="your name"
             variant="solo"
-            @blur="sendMessage({name: yourName})"
-            @click:append-inner="sendMessage({name: yourName})"
+            @blur="sendMessage({name: player.name})"
+            @click:append-inner="sendMessage({name: player.name})"
           />
         </v-col>
         <v-col class="text-truncate text-body-1">members: {{ room?.members.map((member) => member.name).sort().join(', ') }}</v-col>
       </v-row>
-      <v-icon class="ml-2 mr-2" v-if="status === 'CLOSED'" icon="mdi-connection" />
-      <v-icon class="ml-2 mr-2" v-else-if="status === 'OPEN'" icon="mdi-cast-connected" />
+      <v-icon class="ml-2 mr-2" v-if="player.status === 'CLOSED'" icon="mdi-connection" />
+      <v-icon class="ml-2 mr-2" v-else-if="player.status === 'OPEN'" icon="mdi-cast-connected" />
       <v-icon class="ml-2 mr-2" v-else icon="mdi-transit-connection-variant" />
       Vote: {{ Object.keys(room?.votes).length }} / {{ room?.members.length }}
       <v-btn
         color="blue"
         class="mb-2 ml-2 mr-2"
-        @click="room?.members.length > Object.keys(room?.votes).length ? dialog = true : reveal()"
+        @click="room?.members.length > Object.keys(room?.votes).length ? player.dialog = true : reveal()"
         prepend-icon="mdi-cards-playing"
         :disabled="room?.reveal || Object.keys(room?.votes).length == 0"
       >
@@ -63,7 +63,7 @@
       </v-sheet>
 
       <v-row class="pt-2 overflow-x-scroll flex-nowrap">
-        <v-col v-for="(hand, index) in hands" :key="index" cols="auto" class="d-flex justify-center">
+        <v-col v-for="(hand, index) in player.hands" :key="index" cols="auto" class="d-flex justify-center">
           <score-card
             draggable="true"
             class="ma-1"
@@ -73,45 +73,60 @@
             @click="play(hand)"
             :ripple="{ class: 'bg-green-accent-1' }"
             :class="{
-              'bg-green-accent-2': score == hand,
-              'text-white': score == hand
+              'bg-green-accent-2': player.score == hand,
+              'text-white': player.score == hand
             }"
           />
         </v-col>
         <v-col>
           <v-card height="130" width="90" class="ma-1">
-            <v-number-input flat hide-details inset v-model="drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
-            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
+            <v-number-input flat hide-details inset v-model="player.drawScore" variant="solo" controlVariant="stacked" :max="99" :min="1" />
+            <v-btn elevation="0" height="60%" width="100%" append-icon="mdi-credit-card-plus-outline" @click="draw(player.drawScore)" :ripple="{ class: 'bg-green-accent-1' }">draw</v-btn>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-    <confirm-dialog :show="dialog" @update:show="dialog = $event" :open="reveal" />
+    <confirm-dialog :show="player.dialog" @update:show="player.dialog = $event" :open="reveal" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { StyleValue } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  votesStyle,
   room,
-  yourName,
-  hands,
-  score,
-  drawScore,
+  player,
   sendMessage,
   play,
   draw,
   reset,
   reveal,
-  status,
-  dialog,
   initialize
-} from '~/usecases/roomUseCase'
+} from '~/usecases/room-usecase'
 
 initialize(useRoute().query.id as string)
 
 const onDrag = (score: number, event: any) => event.dataTransfer.setData('score', JSON.stringify(score))
 const onDrop = (event: any) => play(Number(event.dataTransfer.getData('score')))
+
+const votesStyle = (index: number): StyleValue => {
+  const random1 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
+  const random2 = Math.floor(Math.random() * (40 + 1 - 50)) + 50
+  const random3 = Math.floor(Math.random() * (0 + 1 - 180)) + 180
+  return !room.value?.reveal ?
+    {
+      top: `${random1}%`,
+      left: `${random2}%`,
+      transform: `rotate(${random3}deg) translate(-${random1}%, -${random2}%)`,
+      position: 'absolute',
+      margin: 'auto',
+      transition: 'all 0.3s ease',
+      zIndex: index
+    } :
+    {
+      transition: 'all 1s ease',
+      transform: 'rotate(0deg) translate(0%, 0%)',
+    }
+}
 
 </script>

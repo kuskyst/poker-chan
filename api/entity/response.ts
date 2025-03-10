@@ -9,3 +9,12 @@ export interface Room {
   title: string
   votes: Map<string, number>
 }
+
+export const newRoom = (): Room => {
+  return{
+    title: '',
+    members: [],
+    votes: new Map<string, number>(),
+    reveal: false
+  }
+}
