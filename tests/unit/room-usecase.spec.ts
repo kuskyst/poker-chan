@@ -11,7 +11,7 @@ import {
   reveal,
   status,
   initialize
-} from '~/usecases/roomUseCase'
+} from '~/usecases/room-usecase'
 import type { Room } from '~/api/entity/response'
 
 jest.mock('~/api/repository')
