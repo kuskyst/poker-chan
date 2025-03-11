@@ -27,8 +27,8 @@ const initialize = (id: string) => {
         player.value.score = 0
         player.value.dialog = false
       }
-      player.value.average = (Object.values(room?.value?.votes).map(parseFloat)
-        .reduce((sum, element) => sum + element, 0)) / Object.values(room?.value?.votes).filter(v => v > 0).length
+      player.value.average = (Object.values(room.value.votes).filter(v => v > 0).map(parseFloat)
+        .reduce((sum, element) => sum + element, 0)) / Object.values(room.value.votes).filter(v => v > 0).length
     }
   })
 }
@@ -53,24 +53,6 @@ const draw = (card: number) => {
 
 const reset = () => sendMessage({ reset: true })
 const reveal = () => sendMessage({ reveal: true })
-
-const methods = {
-  reset: () => sendMessage({ reset: true }),
-  reveal: () => sendMessage({ reveal: true }),
-  send: (message: Message) => sendMessage(message),
-  play: (card: number) => {
-    if (!room.value?.reveal && !isNaN(card)) {
-      player.value.score = card
-      sendMessage({ vote: String(player.value.score) })
-    }
-  },
-  draw: (card: number) => {
-    if (!player.value.hands.includes(card)) {
-      player.value.hands.push(card)
-      player.value.hands.sort((a, b) => a - b)
-    }
-  }
-}
 
 export {
   room,
