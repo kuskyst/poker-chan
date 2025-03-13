@@ -25,7 +25,7 @@ const initialize = (id: string) => {
       room.value = JSON.parse(message.toString())
       if (Object.keys(room?.value?.votes).length <= 0) {
         player.value.score = 0
-        player.value.dialog = false
+        player.value.confirmDialog = false
       }
       player.value.average = (Object.values(room.value.votes).filter(v => v > 0).map(parseFloat)
         .reduce((sum, element) => sum + element, 0)) / Object.values(room.value.votes).filter(v => v > 0).length

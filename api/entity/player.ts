@@ -5,7 +5,8 @@ export interface Player {
   average: number,
   drawScore: number,
   status: string,
-  dialog: boolean
+  confirmDialog: boolean,
+  memberDialog: boolean
 }
 
 export const newPlayer = (): Player => {
@@ -15,6 +16,7 @@ export const newPlayer = (): Player => {
     average: 0,
     drawScore: 10,
     status: 'connecting',
-    dialog: false
+    confirmDialog: false,
+    memberDialog: false
   }
 }
