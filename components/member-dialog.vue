@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="visible" class="w-75">
-    <v-table :fixed-header="true" width="100%" max-width="100%" max-height="500" class="pa-4">
+    <v-table :fixed-header="true" width="100%" max-width="100%" max-height="80%" class="pa-4 overflow-y-scroll">
       <thead>
         <tr>
           <th class="border-e-sm border-md bg-green-accent-2" colspan="2">members</th>
@@ -10,7 +10,7 @@
           <td class="border-md bg-green-accent-1">isVoted</td>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="overflow-y-scroll">
         <tr v-for="(member, index) in room.members" :key="index">
           <th class="border-e-sm border-md">{{ member.name }}</th>
           <td class="border-md">{{ Object.keys(room.votes).includes(member.uuid) ? '○' : '×' }}</td>
