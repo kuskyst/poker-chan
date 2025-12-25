@@ -12,6 +12,7 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'format-detection', content: 'telephone=no' },
+        { name: 'google-site-verification', content: 'i9b95PU0daG3d-Ols3jz4gRJDNj5ArbbpgIj5ErE4fk' },
         { property: 'twitter:card', content: "summary" },
         { property: 'og:title', content: 'poker-chan' },
         { property: 'og:description', content: 'プランニングポーカーちゃん' },

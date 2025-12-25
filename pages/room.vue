@@ -51,7 +51,7 @@
           <v-btn color="red" class="ml-1" @click="reset" prepend-icon="mdi-delete" :disabled="Object.keys(room?.votes).length == 0">Reset</v-btn>
         </v-col>
         <v-col class="d-flex align-center mt-1 ml-6 pa-0">
-          Avarage: {{ room.reveal ? player.average : '??' }}
+          Average: {{ room.reveal ? player.average : '??' }}
         </v-col>
       </v-row>
     </div>
