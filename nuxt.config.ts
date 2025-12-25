@@ -40,6 +40,7 @@ export default defineNuxtConfig({
   ],
 
   modules: [
+    'nuxt-simple-sitemap',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
