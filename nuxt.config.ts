@@ -48,6 +48,11 @@ export default defineNuxtConfig({
       })
     }
   ],
+  nitro: {
+    prerender: {
+      routes: ['/sitemap.xml']
+    }
+  },
   siteUrl: 'https://kuskyst.github.io',
 
   vite: {
