@@ -40,7 +40,7 @@ export default defineNuxtConfig({
   ],
 
   modules: [
-    '@nuxtjs/sitemap',
+    'nuxt-simple-sitemap',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
@@ -48,10 +48,7 @@ export default defineNuxtConfig({
       })
     }
   ],
-  sitemap: {
-    path: '/sitemap.xml',
-    hostname: 'https://kuskyst.github.io/poker-chan',
-  },
+  siteUrl: 'https://kuskyst.github.io',
 
   vite: {
     vue: {
