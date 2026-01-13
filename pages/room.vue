@@ -147,6 +147,10 @@ import {
   initialize
 } from '~/usecases/room-usecase'
 
+useHead({
+  meta: [{ name: 'robots', content: 'noindex, nofollow' }]
+})
+
 initialize(useRoute().query.id as string)
 
 const onDrag = (score: number, event: any) => event.dataTransfer.setData('score', JSON.stringify(score))

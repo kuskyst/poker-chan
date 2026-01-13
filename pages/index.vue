@@ -1,5 +1,6 @@
 <template>
   <div class="bg-teal-accent-3">
+  <h1 class="d-none">プランニングポーカーちゃん（Poker Chan）</h1>
   <v-container height="100vh" class="ma-auto">
     <v-col class="text-center">
       <v-btn append-icon="mdi-home-plus" class="mb-4" width="80%" @click="createRoom">Create new Room</v-btn>
@@ -23,6 +24,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { v4 as uuidv4 } from 'uuid';
+
+useHead({
+  title: 'ポーカーちゃん（poker-chan）',
+  meta: [
+    {
+      name: 'description',
+      content: 'ポーカーちゃん（poker-chan）は、プランニングポーカーアプリです。'
+    }
+  ]
+})
 
 const roomID = ref('')
 

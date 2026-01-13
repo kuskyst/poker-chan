@@ -54,6 +54,9 @@ export default defineNuxtConfig({
     }
   },
   siteUrl: 'https://kuskyst.github.io',
+  sitemap: {
+    exclude: ['/room']
+  },
 
   vite: {
     vue: {
