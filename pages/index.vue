@@ -31,6 +31,22 @@ useHead({
     {
       name: 'description',
       content: 'ポーカーちゃん（poker-chan）は、プランニングポーカーアプリです。'
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: 'poker-chan' },
+    {
+      property: 'og:description',
+      content: 'プランニングポーカーをオンラインで。'
+    },
+    {
+      property: 'og:url',
+      content: 'https://kuskyst.github.io/poker-chan/'
+    },
+    { name: 'twitter:card', content: 'summary' },
+    { name: 'twitter:title', content: 'poker-chan' },
+    {
+      name: 'twitter:description',
+      content: 'プランニングポーカーをオンラインで。'
     }
   ]
 })
