@@ -21,6 +21,7 @@ const vuetify = createVuetify({
           surface: '#FFFFFF',
           primary: '#1976D2',
           text: '#000000',
+          secondary: '#FFFFFF',
         },
       },
       dark: {
@@ -30,6 +31,7 @@ const vuetify = createVuetify({
           surface: '#1E1E1E',
           primary: '#90CAF9',
           text: '#FFFFFF',
+          secondary: '#121212',
         },
       },
     },

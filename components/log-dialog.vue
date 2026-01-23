@@ -8,16 +8,16 @@
               Logs
               <div class="position-relative d-inline-block">
                 <v-btn
-                  icon="mdi-clipboard-check-multiple-outline"
-                  variant="text"
-                  density="compact"
+                  icon="mdi-clipboard-check-multiple"
+                  class="bg-transparent"
+                  elevation="0"
                   @click="copyToClipboard(rooms)" />
                 <v-snackbar
                   v-model="copied"
                   timeout="1000"
                   location="top center"
                   variant="tonal"
-                  color="white"
+                  color="secondary"
                   class="mt-16"
                 >
                   <div class="text-center font-weight-bold">copy !!</div>
@@ -28,7 +28,7 @@
         </tr>
         <tr>
           <th class="border-e-sm border-md bg-green-accent-1">title</th>
-          <td class="border-md bg-green-accent-1">Average SP</td>
+          <td class="border-md bg-green-accent-1">Average</td>
         </tr>
       </thead>
       <tbody class="overflow-y-scroll" v-for="(room, index) in rooms" :key="index">
