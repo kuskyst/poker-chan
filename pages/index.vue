@@ -11,7 +11,7 @@
         width="80%"
         append-inner-icon="mdi-home-import-outline"
         v-model="roomID"
-        bg-color="white"
+        bg-color="theme"
         label="roomID"
         variant="solo"
         clearable @click:append-inner="enterRoom"
