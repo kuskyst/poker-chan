@@ -73,10 +73,8 @@ const copyToClipboard = async (rooms: Room[]) => {
   const text = rooms
     .map(room => {
       const votes = Object.values(room.votes).filter(v => v > 0)
-      const average =
-        votes.length > 0
-          ? votes.reduce((a, b) => a + b, 0) / votes.length
-          : 0
+      const average = votes.length > 0
+          ? votes.reduce((a, b) => a + b, 0) / votes.length : 0
 
       return [`${room.title}: ${average}SP`].join('\n')}
     ).join('\n\n')
@@ -87,31 +85,3 @@ const copyToClipboard = async (rooms: Room[]) => {
 }
 
 </script>
-
-<style scoped>
-.bubble-snackbar {
-  position: absolute !important;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 8px;
-}
-
-.bubble-snackbar .v-snackbar__wrapper {
-  border-radius: 12px;
-  padding: 6px 10px;
-  font-size: 12px;
-  position: relative;
-}
-
-.bubble-snackbar .v-snackbar__wrapper::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px 6px 0 6px;
-  border-style: solid;
-  border-color: var(--v-theme-surface) transparent transparent transparent;
-}
-</style>
