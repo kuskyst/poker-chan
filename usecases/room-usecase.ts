@@ -29,12 +29,14 @@ const initialize = (id: string) => {
       }
       if (room.value.title !== parsedRoom.title) {
         room.value.title = parsedRoom.title
-      } else if (room.value.reveal !== parsedRoom.reveal) {
-        room.value.reveal = parsedRoom.reveal
-      } else {
-        room.value.members = parsedRoom.members
-        room.value.votes = parsedRoom.votes
       }
+      if (room.value.reveal !== parsedRoom.reveal) {
+        room.value.reveal = parsedRoom.reveal
+      }
+
+      room.value.members = parsedRoom.members
+      room.value.votes = parsedRoom.votes
+  
       room.value = parsedRoom
       if (Object.keys(room?.value?.votes).length <= 0) {
         player.value.score = 0
