@@ -2,14 +2,13 @@ import { ref } from 'vue'
 import useWebSocketRepository from '~/api/repository'
 import {
   room,
-  hands,
-  score,
+  player,
+  logs,
   sendMessage,
   play,
   draw,
   reset,
   reveal,
-  status,
   initialize
 } from '~/usecases/room-usecase'
 import type { Room } from '~/api/entity/response'
@@ -70,7 +69,7 @@ describe('roomUseCase', () => {
 
   it('should draw a card', () => {
     draw(7)
-    expect(hands.value).toContain(7)
+    expect(player.value.hands).toContain(7)
   })
 
   it('should reset votes', () => {
