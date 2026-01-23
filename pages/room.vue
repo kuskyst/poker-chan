@@ -6,7 +6,7 @@
           <v-text-field
             append-inner-icon="mdi-check-bold"
             v-model="room.title"
-            bg-color="white"
+            bg-color="theme"
             label="title"
             variant="solo"
             clearable
@@ -30,7 +30,7 @@
           <v-text-field
             append-inner-icon="mdi-check-bold"
             v-model="player.name"
-            bg-color="white"
+            bg-color="theme"
             label="your name"
             variant="solo"
             class="mb-2"
