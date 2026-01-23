@@ -6,7 +6,8 @@ export interface Player {
   drawScore: number,
   status: string,
   confirmDialog: boolean,
-  memberDialog: boolean
+  memberDialog: boolean,
+  logDialog: boolean
 }
 
 export const newPlayer = (): Player => {
@@ -17,6 +18,7 @@ export const newPlayer = (): Player => {
     drawScore: 10,
     status: 'connecting',
     confirmDialog: false,
-    memberDialog: false
+    memberDialog: false,
+    logDialog: false
   }
 }
