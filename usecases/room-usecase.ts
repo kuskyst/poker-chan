@@ -2,10 +2,11 @@ import { ref, watch } from 'vue'
 import useWebSocketRepository from '~/api/repository'
 import type { Message } from '~/api/entity/request'
 import { newPlayer } from '~/api/entity/player'
-import { newRoom } from '~/api/entity/response'
+import { newRoom, Room } from '~/api/entity/response'
 
 const room = ref(newRoom())
 const player = ref(newPlayer())
+const logs = ref<Room[]>([])
 
 let repository: ReturnType<typeof useWebSocketRepository>
 
@@ -22,7 +23,11 @@ const initialize = (id: string) => {
   watch(data, (message) => {
     player.value.status = player.value.status
     if (message) {
-      room.value = JSON.parse(message.toString())
+      const parsedRoom = JSON.parse(message.toString()) as Room
+      if (!room.value.reveal && parsedRoom.reveal) {
+        logs.value.push(parsedRoom)
+      }
+      room.value = parsedRoom
       if (Object.keys(room?.value?.votes).length <= 0) {
         player.value.score = 0
         player.value.confirmDialog = false
@@ -57,6 +62,7 @@ const reveal = () => sendMessage({ reveal: true })
 export {
   room,
   player,
+  logs,
   sendMessage,
   play,
   draw,

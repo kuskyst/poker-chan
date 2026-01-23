@@ -22,6 +22,7 @@
             : player.status === 'OPEN' ? 'mdi-cast-connected'
             : 'mdi-transit-connection-variant'" />
             <v-btn class="ml-2 mb-2" icon="mdi-human-male-female-child" @click="player.memberDialog = true"></v-btn>
+            <v-btn class="ml-2 mb-2" icon="mdi-math-log" @click="player.logDialog = true"></v-btn>
         </v-col>
       </v-row>
       <v-row class="mt-0">
@@ -119,16 +120,9 @@
         </v-hover>
       </v-col>
     </v-row>
-    <confirm-dialog
-      :show="player.confirmDialog"
-      @update:show="player.confirmDialog = $event"
-      :open="reveal"
-    />
-    <member-dialog
-      :show="player.memberDialog"
-      @update:show="player.memberDialog = $event"
-      :room="room"
-    />
+    <confirm-dialog :show="player.confirmDialog" @update:show="player.confirmDialog = $event" :open="reveal" />
+    <member-dialog :show="player.memberDialog" @update:show="player.memberDialog = $event" :room="room" />
+    <log-dialog :show="player.logDialog" @update:show="player.logDialog = $event" :rooms="logs" />
   </div>
 </template>
 
@@ -139,6 +133,7 @@ import { useRoute } from 'vue-router'
 import {
   room,
   player,
+  logs,
   sendMessage,
   play,
   draw,
