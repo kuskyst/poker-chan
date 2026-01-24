@@ -25,7 +25,7 @@ const initialize = (id: string) => {
     if (message) {
       const parsedRoom = JSON.parse(message.toString()) as Room
       if (!room.value.reveal && parsedRoom.reveal) {
-        logs.value.push(parsedRoom)
+        logs.value.push({ ...parsedRoom })
       }
       if (room.value.title !== parsedRoom.title) {
         room.value.title = parsedRoom.title

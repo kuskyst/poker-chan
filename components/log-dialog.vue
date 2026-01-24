@@ -32,7 +32,7 @@
         </tr>
       </thead>
       <tbody class="overflow-y-scroll" v-for="(room, index) in rooms" :key="index">
-        <tr>
+        <tr v-if="Object.values(room.votes).filter(v => v > 0).length > 0">
           <th class="border-e-sm border-md">{{ room.title }}</th>
           <td class="border-md">
             {{
